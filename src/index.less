@@ -1,0 +1,194 @@
+@import './static/iconfont.css';
+
+.butterfly-table-building {
+  background: #2E2E2E;
+  .table-node {
+    position: absolute;
+    border: 1px solid #5A5A5A;
+    border-radius: 4px;
+    color: #fff;
+    .title {
+      position: relative;
+      background: rgba(0,0,0,0.20);
+      border-bottom: 1px solid #5A5A5A;
+      padding-left: 15px;
+      height: 30px;
+      line-height: 30px;
+      cursor: pointer;
+      .point {
+        position: absolute;
+        border-radius: 50%;
+        visibility: hidden;
+        &.show {
+          visibility: visible;
+        }
+        &.left-point {
+          top: 50%;
+          left: 0px;
+        }
+        &.right-point{
+          top: 50%;
+          right: 0px;
+        }
+      }
+      .title-icon-con {
+        position: absolute;
+        display: none;
+        top: 0;
+        right: 15px;
+        color: #484848;
+        i {
+          padding-left: 3px;
+          &:hover {
+            color: rgba(255, 255, 255, 0.5);
+          }
+        }
+        .table-build-icon-xiala{
+          display: inline-block;
+          &.collapse{
+            /* todo: 需要一个新icon */
+          }
+        }
+      }
+    }
+    .field {
+      position: relative;
+      cursor: move;
+      height: 24px;
+      line-height: 24px;
+      &:hover {
+        background: rgba(216, 216, 216, 0.06);
+        .point {
+          visibility: visible;
+        }
+      }
+      &.focus-chain {
+        background: rgba(246, 106, 2, 0.3);
+      }
+      .field-item {
+        display: inline-block;
+        text-align: center;
+      }
+      .point {
+        position: absolute;
+        border-radius: 50%;
+        visibility: hidden;
+        &.show {
+          visibility: visible;
+        }
+        &.left-point {
+          top: 50%;
+          left: 0px;
+        }
+        &.right-point{
+          top: 50%;
+          right: 0px;
+        }
+      }
+    }
+    &.focus {
+      border: 1px solid #F66902;
+      box-shadow: 0px 0px 5px #f66902;
+    }
+    &:hover {
+      .title-icon-con {
+        display: inline-block;
+      }
+    }
+  }
+  .visual-modeling-link{
+    &.focus {
+      stroke: #F66902;
+    }
+    &.focus-chain {
+      stroke: rgba(246, 106, 2, 0.3);
+    }
+  }
+  .visual-modeling-label {
+    transform: scale(0.8);
+    background: #313131;
+    border: 1px solid #828282;
+    padding: 1px 6px;
+    border-radius: 13px;
+    color: #fff;
+    &.focus {
+      border: 1px solid #F66902;
+    }
+    &.focus-chain {
+      background: rgba(246, 106, 2, 0.3);
+    }
+    &.butterflies-collapse-label{
+      padding: 0px 10px;
+      height: 16px;
+      line-height: 8px;
+      font-weight: 900;
+      cursor: pointer;
+      &:hover {
+        background: #383838;
+      }
+    }
+  }
+  .visual-modeling-arrow {
+    &.focus {
+      stroke: #F66902;
+    }
+    &.focus-chain {
+      stroke: rgba(246, 106, 2, 0.3);
+    }
+  }
+  .butterflies-link-event-handler {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .table-build-canvas-action {
+    background: #333;
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, .5);
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 999;
+    border: 1px solid #676565;
+    div {
+      height: 24px;
+      width: 24px;
+      text-align: center;
+      line-height: 24px;
+      cursor: pointer;
+      color: #fff;
+      opacity: .7;
+      border-bottom: 1px solid #676565;
+      i {
+        -webkit-text-stroke-width: 0;
+        font-size: 14px;
+      }
+    }
+    div:hover{
+      background: #0f0f0f;
+    }
+    div:last-child {
+      border-bottom: none;
+    }
+  }
+}
+.visual-modeling-collapse-menu{
+  width: 275px;
+  .butterfly-tooltip-inner {
+    max-width: 500px!important;
+    text-align: left!important;
+    .menu-title {
+      margin-bottom: 0;
+      padding: 3px 0;
+      border-bottom: 1px solid #5A5A5A;
+    }
+    .menu-container {
+      width: 250px;
+      .butterfly-data-mapping {
+        margin-top: 10px;
+        .butterfly-svg {
+          position: absolute;
+        }
+      }
+    }
+  }
+}
