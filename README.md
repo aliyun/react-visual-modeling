@@ -92,3 +92,5 @@ interface props {
   onFocusCanvas(): void,       // 聚焦空白处事件
 };
 ```
+
+如需要更多定制的需求，您可以提issue或者参考[Butterfly](https://github.com/alibaba/butterfly)来定制您需要的需求

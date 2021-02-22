@@ -92,3 +92,5 @@ interface props {
   onFocusCanvas(): void,       // focus canvas blank events
 };
 ```
+
+If you need more customized requirements, you can refer to issue or [butterfly](https://github.com/alibaba/butterfly/blob/master/README.en-US.md) to customize your needs
