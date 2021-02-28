@@ -88,7 +88,10 @@ class Component extends React.Component {
             enable: true,
             config: {
               nodeColor: 'rgba(216, 216, 216, 0.13)',
-              activeNodeColor: '#F66902'
+              activeNodeColor: '#F66902',
+              viewportStyle: {
+                'background-color': 'rgba(216, 216, 216, 0.07)'
+              }
             }
           },
           collapse: {
