@@ -82,6 +82,18 @@ class Component extends React.Component {
         }]}
         columns={this.state.columns}
         data={this.state.data}
+        emptyContent={
+          <div className="empty-content">
+            <p className="desc">暂无数据</p>
+            <p
+              className="add-field"
+              onClick={(e) => {
+                e.stopPropagation();
+                console.log('自定义空状态');
+              }}
+            >+ 添加字段</p>
+          </div>
+        }
         config={{
           allowKeyboard: true,
           minimap: {
