@@ -1,10 +1,13 @@
 'use strict';
 
-import { Node } from 'butterfly-dag';
 import $ from 'jquery';
-import Endpoint from './endpoint';
 import * as _ from 'lodash';
+import { Node } from 'butterfly-dag';
 import * as ReactDOM from 'react-dom';
+
+
+import emptyDom from './empty';
+import Endpoint from './endpoint';
 import RightMenuGen from './right-menu';
 
 export default class TableNode extends Node {
@@ -43,6 +46,31 @@ export default class TableNode extends Node {
     return node[0];
   }
 
+  _addEventListener() {
+    $(this.dom).on('mouseDown', (e) => {
+      const LEFT_KEY = 0;
+      if (e.button !== LEFT_KEY) {
+        return;
+      }
+
+      if (this.draggable) {
+        this._isMoving = true;
+        this.emit('InnerEvents', {
+          type: 'node:dragBegin',
+          data: this
+        });
+      } else {
+        // 单纯为了抛错事件给canvas，为了让canvas的dragtype不为空，不会触发canvas:click事件
+        this.emit('InnerEvents', {
+          type: 'node:mouseDown',
+          data: this
+        });
+
+        return true;
+      }
+    });
+  }
+
   mounted() {
     // 生成field的endpoint
     this._createNodeEndpoint();
@@ -50,6 +78,8 @@ export default class TableNode extends Node {
     if (this.fieldsList.length > 0) {
       let width = $(this.fieldsList[0].dom).width();
       $(this.dom).find('.title').css('width', width);
+    } else {
+      $(this.dom).find('.title').css('width', this.options._emptyWidth || 150);
     }
     // 生成右键菜单
     this._createRightMenu();
@@ -193,37 +223,54 @@ export default class TableNode extends Node {
     }
     let coloums = _.get(this, 'options._columns', []);
     let _primaryKey = coloums[0].key;
-    let result = fields.map((_field) => {
-      let fieldDom = $('<div class="field"></div>');
-      coloums.forEach((_col) => {
-        if (_col.render) {
-          let fieldItemDom = $(`<span class="field-item"></span>`);
-          fieldItemDom.css('width', (_col.width || this.COLUMN_WIDTH) + 'px').attr('dataType', _col.key);
-          fieldDom.append(fieldItemDom);
-          ReactDOM.render(
-            _col.render(_field[_col.key], _field),
-            fieldItemDom[0]
-          );
-        } else {
-          let fieldItemDom = $(`<span class="field-item">${_field[_col.key]}</span>`);
-          fieldItemDom.css('width', (_col.width || this.COLUMN_WIDTH) + 'px').attr('dataType', _col.key);
-          fieldDom.append(fieldItemDom);
-        }
-        if (_col.primaryKey) {
-          _primaryKey = _col.key;
-        }
+
+    if (fields && fields.length) {
+      return fields.map((_field) => {
+        let fieldDom = $('<div class="field"></div>');
+        coloums.forEach((_col) => {
+          if (_col.render) {
+            let fieldItemDom = $(`<span class="field-item"></span>`);
+            fieldItemDom.css('width', (_col.width || this.COLUMN_WIDTH) + 'px').attr('dataType', _col.key);
+            fieldDom.append(fieldItemDom);
+            ReactDOM.render(
+              _col.render(_field[_col.key], _field),
+              fieldItemDom[0]
+            );
+          } else {
+            let fieldItemDom = $(`<span class="field-item">${_field[_col.key]}</span>`);
+            fieldItemDom.css('width', (_col.width || this.COLUMN_WIDTH) + 'px').attr('dataType', _col.key);
+            fieldDom.append(fieldItemDom);
+          }
+          if (_col.primaryKey) {
+            _primaryKey = _col.key;
+          }
+        });
+        let leftPoint = $('<div class="point left-point"></div>');
+        let rightPoint = $('<div class="point right-point"></div>');
+        fieldDom.append(leftPoint).append(rightPoint);
+        container.append(fieldDom);
+        let _newFieldItem = {
+          id: _field[_primaryKey],
+          dom: fieldDom
+        };
+        this.fieldsList.push(_newFieldItem);
+        return _newFieldItem;
       });
-      let leftPoint = $('<div class="point left-point"></div>');
-      let rightPoint = $('<div class="point right-point"></div>');
-      fieldDom.append(leftPoint).append(rightPoint);
-      container.append(fieldDom);
-      let _newFieldItem = {
-        id: _field[_primaryKey],
-        dom: fieldDom
-      };
-      this.fieldsList.push(_newFieldItem);
-      return _newFieldItem;
+    }
+
+    const _emptyContent = _.get(this.options, '_emptyContent');
+    const noDataTree = emptyDom({
+      content: _emptyContent,
+      width: this.options._emptyWidth
     });
+
+    container.append(noDataTree);
+
+    const _newFieldItem = {
+      id: 0,
+      dom: noDataTree
+    };
+    return _newFieldItem;
   }
   _createNodeEndpoint(fieldList) {
     let _fieldList = (fieldList || this.fieldsList);

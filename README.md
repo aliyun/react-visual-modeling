@@ -16,6 +16,7 @@
 * 支持节点，字段的hover，focus，linked以及全链路高亮状态
 * 支持节点，线段的右键菜单
 * 支持minimap，以及minimap的联动移动和高亮状态
+* 支持空字段内容定制
 
 ## 📦 安装
 ```
@@ -85,6 +86,8 @@ interface props {
   edgeMenu: Array<menu>,       // 线段右键菜单配置
   config: config,              // 如上述配置
   data: any,                   // 数据
+  emptyContent?: string | JSX.Element; // 当表字段为空时显示内容
+  emptyWidth?: number | string; // 当表字段为空时表容器宽度
   onLoaded(canvas: any): void, // 渲染完毕事件
   onChange(data: any): void,   // 图内数据变化事件
   onFocusNode(node: any): void,// 聚焦节点事件

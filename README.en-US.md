@@ -16,6 +16,7 @@ English| [简体中文](./README.md)
 * support the node, field's status of hover, focus, linked and full chain highlight
 * support the right-click menu of node and edge
 * support minimap and highlight state of minimap
+* support custom empty field content
 
 ## 📦 Install
 ```
@@ -85,6 +86,8 @@ interface props {
   edgeMenu: Array<menu>,       // Edge Right-click Menu Configuration
   config: config,              // As configured above
   data: any,                   // data
+  emptyContent?: string | JSX.Element; // show content when table field is empty
+  emptyWidth?: number | string; // table container width when table field is empty
   onLoaded(canvas: any): void, // canvas loaded event
   onChange(data: any): void,   // canvas data change event
   onFocusNode(node: any): void,// focus node events
