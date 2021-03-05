@@ -259,8 +259,11 @@ export default class TableNode extends Node {
     }
 
     const _emptyContent = _.get(this.options, '_emptyContent');
+    const noDataDom = $('<div></div>');
+    container.append(noDataDom);
     const noDataTree = emptyDom({
       content: _emptyContent,
+      container: noDataDom,
       width: this.options._emptyWidth
     });
 

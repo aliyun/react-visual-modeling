@@ -12,8 +12,8 @@ const isReactEle = (HTMLElement) => {
  * params {Number | String} config.width
  */
 export default (config) => {
-  debugger;
   const content = config.content;
+  const container = config.container[0];
   let width = config.width;
 
   if (!width) {
@@ -28,7 +28,7 @@ export default (config) => {
 
   if (content) {
     if (isReactEle(content)) {
-      emptyDom = ReactDOM.render(content, document.createElement('div'));
+      emptyDom = ReactDOM.render(content, container);
     } else {
       emptyDom = $(content);
     }

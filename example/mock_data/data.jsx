@@ -21,7 +21,19 @@ export const data = {
     left: 200,
     id: 'aaa',
     title: 'aaa',
-    fields: []
+    fields: [{
+      id: 'field_1',
+      type: 'string',
+      desc: '字段1'
+    }, {
+      id: 'field_2',
+      type: 'string',
+      desc: '字段2'
+    }, {
+      id: 'field_3',
+      type: 'string',
+      desc: '字段3'
+    }]
   }, {
     top: 500,
     left: 600,
@@ -94,6 +106,12 @@ export const data = {
       type: 'string',
       desc: '字段3'
     }]
+  }, {
+    top: 540,
+    left: 1000,
+    id: 'fff',
+    title: '自定义空内容',
+    fields: []
   }],
   edges: [{
     id: 1,

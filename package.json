@@ -1,6 +1,6 @@
 {
   "name": "react-visual-modeling",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "``` javascript",
   "main": "dist/index.js",
   "pack": "pack/index.js",
