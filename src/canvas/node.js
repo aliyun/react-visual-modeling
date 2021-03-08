@@ -256,24 +256,24 @@ export default class TableNode extends Node {
         this.fieldsList.push(_newFieldItem);
         return _newFieldItem;
       });
+    } else {
+      const _emptyContent = _.get(this.options, '_emptyContent');
+      const noDataCon = $('<div></div>');
+      container.append(noDataCon);
+      const noDataTree = emptyDom({
+        content: _emptyContent,
+        container: noDataCon,
+        width: this.options._emptyWidth
+      });
+
+      container.append(noDataTree);
+
+      const _newFieldItem = {
+        id: 0,
+        dom: noDataTree
+      };
+      return _newFieldItem;
     }
-
-    const _emptyContent = _.get(this.options, '_emptyContent');
-    const noDataDom = $('<div></div>');
-    container.append(noDataDom);
-    const noDataTree = emptyDom({
-      content: _emptyContent,
-      container: noDataDom,
-      width: this.options._emptyWidth
-    });
-
-    container.append(noDataTree);
-
-    const _newFieldItem = {
-      id: 0,
-      dom: noDataTree
-    };
-    return _newFieldItem;
   }
   _createNodeEndpoint(fieldList) {
     let _fieldList = (fieldList || this.fieldsList);
