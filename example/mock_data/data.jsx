@@ -106,6 +106,12 @@ export const data = {
       type: 'string',
       desc: '字段3'
     }]
+  }, {
+    top: 540,
+    left: 1000,
+    id: 'fff',
+    title: '自定义空内容',
+    fields: []
   }],
   edges: [{
     id: 1,

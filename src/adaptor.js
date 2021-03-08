@@ -5,13 +5,15 @@ import Edge from './canvas/edge';
 import * as _ from 'lodash';
 
 export let transformInitData = (info) => {
-  let {columns, data, config, nodeMenu, edgeMenu} = info;
+  let {columns, data, config, nodeMenu, edgeMenu, emptyContent, emptyWidth} = info;
   let nodes = (data.nodes || []).map((item) => {
     return _.assign(item, {
       _columns: columns,
       _config: config,
       _menu: nodeMenu,
-      Class: TableNode
+      Class: TableNode,
+      _emptyWidth: emptyWidth,
+      _emptyContent: emptyContent
     });
   });
   let edges = (data.edges || []).map((item) => {
