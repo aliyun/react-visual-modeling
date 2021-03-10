@@ -60,6 +60,8 @@ interface ComProps {
   edgeMenu: Array<menu>,       // 线段右键菜单配置
   config: config,              // 如上述配置
   data: any,                   // 数据
+  emptyWidth?: number | string, // 空数据时默认标题宽度
+  emptyContent?: string | JSX.Element, // 空数据显示内容
   onLoaded(canvas: any): void, // 渲染完毕事件
   onChange(data: any): void,   // 图内数据变化事件
   onFocusNode(node: any): void,// 聚焦节点事件
@@ -99,7 +101,9 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       config: this.props.config,
       nodeMenu: this.props.nodeMenu,
       edgeMenu: this.props.edgeMenu,
-      data: _.cloneDeep(this.props.data)
+      data: _.cloneDeep(this.props.data),
+      emptyContent: this.props.emptyContent,
+      emptyWidth: this.props.emptyWidth
     });
 
     this.canvasData = result;
@@ -226,7 +230,9 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       config: this.props.config,
       nodeMenu: this.props.nodeMenu,
       edgeMenu: this.props.edgeMenu,
-      data: _.cloneDeep(newProps.data)
+      data: _.cloneDeep(newProps.data),
+      emptyContent: this.props.emptyContent,
+      emptyWidth: this.props.emptyWidth
     });
     let diffInfo = diffPropsData(result, this.canvasData, this.props.columns);
     if (diffInfo.addNodes.length > 0) {
