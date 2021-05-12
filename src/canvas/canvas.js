@@ -6,8 +6,11 @@ import CollapseMenuGen from './collapse-menu.jsx';
 export default class TableCanvas extends Canvas {
   constructor(opts) {
     super(opts);
-    this.attachEvent();
     this.originEdges = [];
+    this._focusItem = null;
+    this._enableHoverChain = opts.data.enableHoverChain;
+    this._enableFocusChain = opts.data.enableFocusChain;
+    this.attachEvent();
   }
   attachEvent() {
     // 线段删除特殊处理
@@ -20,14 +23,22 @@ export default class TableCanvas extends Canvas {
         data: linkedPoint
       });
     });
-    this.on('custom.endpoint.focus', (data) => {
-      let point = data.point;
-      this.focusChain(point.nodeId, point.id);
-    });
-    this.on('custom.endpoint.unfocus', (data) => {
-      let point = data.point;
-      this.unfocusChain(point.nodeId, point.id);
-    });
+    if (this._enableHoverChain) {
+      this.on('custom.endpoint.hover', (data) => {
+        let point = data.point;
+        this.focusChain(point.nodeId, point.id, 'hover-chain');
+      });
+      this.on('custom.endpoint.unHover', (data) => {
+        let point = data.point;
+        this.unfocusChain(point.nodeId, point.id, 'hover-chain');
+      });
+    }
+    if (this._enableFocusChain) {
+      this.on('custom.endpoint.focus', (data) => {
+        let point = data.point;
+        this.focusChain(point.nodeId, point.id, 'focus-chain');
+      });
+    }
     this.on('custom.node.expand', (data) => {
       this.expand(data.nodeId);
     });
@@ -152,28 +163,38 @@ export default class TableCanvas extends Canvas {
       this.addEdges(newEdges, true);
     }
   }
-  focusChain(nodeId, pointId) {
+  focusChain(nodeId, pointId, addClass) {
     let chain = this._findChain(nodeId, pointId);
-    if (chain.edges.length === 0) {
-      return;
-    }
+    // 后续看看单个endpoint需不需要focus
+    // if (chain.edges.length === 0) {
+    //   return;
+    // }
     chain.edges.forEach((item) => {
-      item.focusChain();
+      item.focusChain(addClass);
     });
     chain.point.forEach((item) => {
-      item.point.focusChain();
+      item.point.focusChain(addClass);
     });
+    if (this._focusItem && addClass === 'focus-chain') {
+      this.unfocusChain(this._focusItem.nodeId, this._focusItem.pointId, addClass);
+    }
+    if (addClass === 'focus-chain') {
+      this._focusItem = {
+        nodeId: nodeId,
+        pointId: pointId
+      }
+    }
   }
-  unfocusChain(nodeId, pointId) {
+  unfocusChain(nodeId, pointId, rmClass) {
     let chain = this._findChain(nodeId, pointId);
-    if (chain.edges.length === 0) {
-      return;
-    }
+    // if (chain.edges.length === 0) {
+    //   return;
+    // }
     chain.edges.forEach((item) => {
-      item.unfocusChain();
+      item.unfocusChain(rmClass);
     });
     chain.point.forEach((item) => {
-      item.point.unfocusChain();
+      item.point.unfocusChain(rmClass);
     });
   }
   _findChain(nodeId, pointId) {
@@ -235,6 +256,12 @@ export default class TableCanvas extends Canvas {
     return {
       edges: resultEdges,
       point: resultPoints
+    }
+  }
+  unfocus() {
+    if (this._focusItem && this._enableFocusChain) {
+      this.unfocusChain(this._focusItem.nodeId, this._focusItem.pointId, 'focus-chain');
+      this._focusItem = null;
     }
   }
 };

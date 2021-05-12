@@ -20,30 +20,33 @@ class NewEndPoint extends Endpoint {
           data: this
         });
       }
+      this.emit('custom.endpoint.focus', {
+        point: this
+      });
     });
 
     // todo: 高亮整条链路
     if (this.options._isNodeSelf) {
       $(this.dom).on('mouseover', (e) => {
-        this.emit('custom.endpoint.focus', {
+        this.emit('custom.endpoint.hover', {
           point: this
         });
       });
   
       $(this.dom).on('mouseout', (e) => {
-        this.emit('custom.endpoint.unfocus', {
+        this.emit('custom.endpoint.unHover', {
           point: this
         });
       });
     }
   }
-  focusChain() {
-    $(this.dom).addClass('focus-chain');
-    $(this.arrowDom).addClass('focus-chain');
+  focusChain(addClass) {
+    $(this.dom).addClass(addClass);
+    $(this.arrowDom).addClass(addClass);
   }
-  unfocusChain() {
-    $(this.dom).removeClass('focus-chain');
-    $(this.arrowDom).removeClass('focus-chain');
+  unfocusChain(rmClass) {
+    $(this.dom).removeClass(rmClass);
+    $(this.arrowDom).removeClass(rmClass);
   }
 }
 

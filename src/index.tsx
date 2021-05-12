@@ -5,6 +5,7 @@ import * as ReactDOM from 'react-dom';
 import './index.less';
 import Canvas from './canvas/canvas';
 import Edge from './canvas/edge';
+import {Arrow} from 'butterfly-dag';
 import 'butterfly-dag/dist/index.css';
 import {transformInitData, transformChangeData, diffPropsData} from './adaptor';
 import * as _ from 'lodash';
@@ -25,6 +26,8 @@ interface config {
     enable: boolean,       // 允许节点收缩
     defaultMode: string    // 默认以哪种形式展示
   },
+  enableHoverChain: boolean,
+  enableFoucsChain: boolean,
   titleRender?(title: JSX.Element): void,  // 节点title的渲染方法
   titleExtIconRender?(node: JSX.Element): void,  // 节点右侧按钮的渲染方法
   labelRender?(label: JSX.Element): void,  // 线段label的渲染方法
@@ -62,7 +65,7 @@ interface ComProps {
   data: any,                   // 数据
   emptyWidth?: number | string, // 空数据时默认标题宽度
   emptyContent?: string | JSX.Element, // 空数据显示内容
-  onLoaded(canvas: any): void, // 渲染完毕事件
+  onLoaded(canvas: any, utils: any): void, // 渲染完毕事件
   onChange(data: any): void,   // 图内数据变化事件
   onFocusNode(node: any): void,// 聚焦节点事件
   onFocusEdge(edge: any): void,// 聚焦线段事件
@@ -79,6 +82,8 @@ export default class TableBuilding extends React.Component<ComProps, any> {
   protected canvasData: any;
   private _focusNodes: any;
   private _focusLinks: any;
+  private _enableHoverChain: any;
+  private _enableFocusChain: any;
   props: any;
   constructor(props: ComProps) {
     super(props);
@@ -87,6 +92,10 @@ export default class TableBuilding extends React.Component<ComProps, any> {
 
     this._focusNodes = [];
     this._focusLinks = [];
+
+    this._enableHoverChain = _.get(props, 'config.enableHoverChain', true);
+    this._enableFocusChain = _.get(props, 'config.enableFocusChain', false);
+
   }
   componentDidMount() {
     let root = ReactDOM.findDOMNode(this) as HTMLElement;
@@ -118,6 +127,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
           id: item.options.id,
           sourceNode: item.options.sourceNode,
           targetNode: item.options.targetNode,
+          arrowShapeType: item.arrowShapeType,
           source: _newSource,
           target: _newTarget,
           _menu: item.options._menu,
@@ -144,7 +154,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       moveable: true,
       theme: {
         edge: {
-          type: 'AdvancedBezier',
+          shapeType: 'AdvancedBezier',
           arrow: true,
           isExpandWidth: true,
           arrowPosition: 1,
@@ -163,7 +173,15 @@ export default class TableBuilding extends React.Component<ComProps, any> {
           enable: true,
           autoMovePadding: [20, 20, 20, 20]
         },
+      },
+      data: {
+        enableHoverChain: this._enableHoverChain,
+        enableFocusChain: this._enableFocusChain
       }
+    });
+
+    this.props.beforeLoad({
+      Arrow
     });
 
     this.canvas.draw(result, () => {
@@ -212,6 +230,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     this.canvas.on('system.canvas.click', (data: any) => {
       this._unfocus();
       this.props.onFocusCanvas && this.props.onFocusCanvas();
+      this.canvas.unfocus();
     });
 
     this.canvas.on('custom.node.delete', (data: any) => {
@@ -222,7 +241,6 @@ export default class TableBuilding extends React.Component<ComProps, any> {
   }
   shouldComponentUpdate(newProps: ComProps, newState: any) {
     // todo: 需要把state去掉
-
     console.log('shouldComponentUpdate');
     // 更新节点
     let result = transformInitData({
