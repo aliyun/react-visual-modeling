@@ -46,31 +46,6 @@ export default class TableNode extends Node {
     return node[0];
   }
 
-  _addEventListener() {
-    $(this.dom).on('mouseDown', (e) => {
-      const LEFT_KEY = 0;
-      if (e.button !== LEFT_KEY) {
-        return;
-      }
-
-      if (this.draggable) {
-        this._isMoving = true;
-        this.emit('InnerEvents', {
-          type: 'node:dragBegin',
-          data: this
-        });
-      } else {
-        // 单纯为了抛错事件给canvas，为了让canvas的dragtype不为空，不会触发canvas:click事件
-        this.emit('InnerEvents', {
-          type: 'node:mouseDown',
-          data: this
-        });
-
-        return true;
-      }
-    });
-  }
-
   mounted() {
     // 生成field的endpoint
     this._createNodeEndpoint();

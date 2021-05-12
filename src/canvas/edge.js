@@ -32,15 +32,15 @@ export default class BaseEdge extends Edge {
     $(this.arrowDom).removeClass('focus');
     $(this.labelDom).removeClass('focus');
   }
-  focusChain() {
-    $(this.dom).addClass('focus-chain');
-    $(this.arrowDom).addClass('focus-chain');
-    $(this.labelDom).addClass('focus-chain');
+  focusChain(addClass = 'hover-chain') {
+    $(this.dom).addClass(addClass);
+    $(this.arrowDom).addClass(addClass);
+    $(this.labelDom).addClass(addClass);
   }
-  unfocusChain() {
-    $(this.dom).removeClass('focus-chain');
-    $(this.arrowDom).removeClass('focus-chain');
-    $(this.labelDom).removeClass('focus-chain');
+  unfocusChain(rmClass = 'hover-chain') {
+    $(this.dom).removeClass(rmClass);
+    $(this.arrowDom).removeClass(rmClass);
+    $(this.labelDom).removeClass(rmClass);
   }
   drawLabel(label) {
     let sourceNode = this.sourceNode;

@@ -23,12 +23,35 @@ class Component extends React.Component {
       data: {}
     };
   }
-  componentDidMount() {
+  componentWillMount() {
     this._data = _.cloneDeep(data);
     this.setState({
       data: this._data
     });
-    setTimeout(() => {
+    // setTimeout(() => {
+    //   let newData = _.cloneDeep(this.state.data);
+    //   newData.nodes.push({
+    //     top: 300,
+    //     left: 500,
+    //     id: 'ggg',
+    //     title: '我是新增的',
+    //     fields: [{
+    //       id: 'field_1',
+    //       type: 'string',
+    //       desc: '字段1'
+    //     }, {
+    //       id: 'field_2',
+    //       type: 'string',
+    //       desc: '字段2'
+    //     }, {
+    //       id: 'field_3',
+    //       type: 'string',
+    //       desc: '字段3'
+    //     }]
+    //   });
+    //   this.setState({
+    //     data: newData
+    //   });
       // this._data = _.cloneDeep(data);
       // this._data.nodes[0].fields[0].type = 'bigint';
       // this._data.nodes[1].fields[0].type = 'bigint';
@@ -39,7 +62,7 @@ class Component extends React.Component {
       // console.log(this.canvas);
 
       // this.canvas.collapse('aaa');
-    }, 2000);
+    // }, 10000);
     // setTimeout(() => {
     //   this.canvas.expand('aaa');
     // }, 4000);
@@ -47,6 +70,17 @@ class Component extends React.Component {
   render() {
     return (
       <TableBuilding
+        beforeLoad={(utils) => {
+          // 自定义注册箭头
+          const {Arrow} = utils;
+          Arrow.registerArrow([{
+            key: 'arrow1',
+            type: 'svg',
+            width: 14,
+            height: 14,
+            content: 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyBjbGFzcz0iaWNvbiIgd2lkdGg9IjIwMHB4IiBoZWlnaHQ9IjIwMC4wMHB4IiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTg0NS4zNTQ2NjcgMjYuNDk2bDQ1LjQ4MjY2NiA3Mi4xOTJMMzAyLjEyMjY2NyA0NjkuMzMzMzMzSDkxNy4zMzMzMzN2ODUuMzMzMzM0SDM2MC40OTA2NjdsNTMwLjk0NCAzNzMuNjc0NjY2LTQ5LjA2NjY2NyA2OS43Ni02NDUuODAyNjY3LTQ1NC40IDM2LjUyMjY2Ny01Mi4wMTA2NjYtMzUuOTI1MzMzLTU3LjA0NTMzNEw4NDUuMzU0NjY3IDI2LjQ1MzMzM3oiIGZpbGw9IiNGNjY5MDIiIC8+PHBhdGggZD0iTTI3Ny4zMzMzMzMgNTEybS0xMjggMGExMjggMTI4IDAgMSAwIDI1NiAwIDEyOCAxMjggMCAxIDAtMjU2IDBaIiBmaWxsPSIjRjY2OTAyIiAvPjxwYXRoIGQ9Ik0yNzcuMzMzMzMzIDM0MS4zMzMzMzNhMTcwLjY2NjY2NyAxNzAuNjY2NjY3IDAgMSAxIDAgMzQxLjMzMzMzNCAxNzAuNjY2NjY3IDE3MC42NjY2NjcgMCAwIDEgMC0zNDEuMzMzMzM0eiBtMCA4NS4zMzMzMzRhODUuMzMzMzMzIDg1LjMzMzMzMyAwIDEgMCAwIDE3MC42NjY2NjYgODUuMzMzMzMzIDg1LjMzMzMzMyAwIDAgMCAwLTE3MC42NjY2NjZ6IiBmaWxsPSIjRkZCMjdCIiAvPjwvc3ZnPg=='
+          }]);
+        }}
         onLoaded={(canvas) => {
           this.canvas = canvas;
         }}

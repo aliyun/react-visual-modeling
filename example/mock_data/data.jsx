@@ -161,5 +161,6 @@ export const data = {
     targetNode: 'ccc',
     source: 'field_3',
     target: 'field_3',
+    arrowShapeType: 'arrow1'
   }]
 };
