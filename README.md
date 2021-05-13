@@ -32,20 +32,20 @@ $ npm install react-visual-modeling butterfly-dag -S
 |参数|说明|类型|默认值|
 |----|----|----|----|
 |data|画布数据|any|-|
-|width|组件宽度|  number \| string|-|
-|height|组件高度| number \| string |-|
-|className|组件类名 |string |-|
+|width|组件宽度|  `number` \| `string` |-|
+|height|组件高度| `number` \| `string` |-|
+|className|组件类名 | `string` |-|
 |columns| 列的配置描述, 见[columns props](#columns) | Array<[columns](#columns)> | |-|
 |nodeMenu| 节点右键菜单配置|  Array<[menu](#menu-type)> | |  [ ]  |
 |edgeMenu| 线段右键菜单配置|  Array<[menu](#menu-type)> | |  [ ]  |
 |config| 组件的画布配置，见[config props](#config) | any | |-|
-|emptyContent|  当表字段为空时显示内容  |  string \| JSX. Element|  |-|
-|emptyWidth|  当表字段为空时表容器宽度 | number \| string| |-|
-|onLoaded| 渲染完毕事件  |(canvas) => void||-|
-|onChange| 图内数据变化事件|(data) => void||-|
-|  onFocusNode  |聚焦节点事件  |(node) => void||-|
-|  onFocusEdge  |聚焦线段事件  |(edge) => void||-|
-| onFocusCanvas |  聚焦空白处事件 |  () => void|  |-|
+|emptyContent|  当表字段为空时显示内容  |  `string` \| `JSX. Element`|  |-|
+|emptyWidth|  当表字段为空时表容器宽度 | `number` \| `string`| |-|
+|onLoaded| 渲染完毕事件  |`(canvas) => void|`|-|
+|onChange| 图内数据变化事件|`(data) => void`||-|
+|  onFocusNode  |聚焦节点事件  |`(node) => void`||-|
+|  onFocusEdge  |聚焦线段事件  |`(edge) => void`||-|
+| onFocusCanvas |  聚焦空白处事件 | `() => void` |  |-|
 
 <br />
 
@@ -55,10 +55,10 @@ $ npm install react-visual-modeling butterfly-dag -S
 
 |参数|说明|类型|默认值|
 |---|---|---|---|
-|title|每列的名字| string|-|
-| key|  每列的唯一标志，对应数据上的key值 | string|-|
-|width|每列宽度| number||-|
-| primaryKey | 这列的key对应的value是否作为键值对 |boolean|-|
+|title|每列的名字| `string` |-|
+| key|  每列的唯一标志，对应数据上的key值 | `string` |-|
+|width|每列宽度| `number` ||-|
+| primaryKey | 这列的key对应的value是否作为键值对 | `boolean` |-|
 |render|支持每列的自定义样式|`(key) => void`|-|
 
 <br />
@@ -69,10 +69,10 @@ $ npm install react-visual-modeling butterfly-dag -S
 
 |参数| 说明|类型| 默认值 |
 |---|---|---|---|
-|  title  |每列的展示的名字|string||-|
-|key| 每列的唯一标志，对应数据上的key值 |string||-|
-|  render |  支持每列的自定义样式  |(key) => void||-|
-| onClick | 每列的点击回调| (key, data) => void| |-|
+|  title  |每列的展示的名字| `string` ||-|
+|key| 每列的唯一标志，对应数据上的key值 | `string` ||-|
+|  render |  支持每列的自定义样式  | `(key) => void` ||-|
+| onClick | 每列的点击回调| `(key, data) => void` | |-|
 
 <br>
 
@@ -82,12 +82,12 @@ $ npm install react-visual-modeling butterfly-dag -S
 
 |参数|说明|类型|默认值|
 |---|---|---|---|
-|showActionIcon| 是否展示操作icon：放大，缩小，聚焦 |boolean|-|
-|allowKeyboard|允许键盘删除事件|boolean|-|
+|showActionIcon| 是否展示操作icon：放大，缩小，聚焦 | `boolean` |-|
+|allowKeyboard|允许键盘删除事件| `boolean` |-|
 |  collapse  |是否允许节点收缩| [collapse Prop](#collapse-prop) { }|-|
-| titleRender|  节点title的渲染方法  |(title) => void|-|
-| titleExtIconRender | 节点右侧按钮的渲染方法 |(node) => void|-|
-| labelRender|  线段label的渲染方法  |(label) => void|-|
+| titleRender|  节点title的渲染方法  | `(title) => void` |-|
+| titleExtIconRender | 节点右侧按钮的渲染方法 | `(node) => void` |-|
+| labelRender|  线段label的渲染方法  | `(label) => void` |-|
 |minimap  | 是否开启缩略图|  [minimap Prop](#minimap-prop) { }|-|
 
 <br>
@@ -98,8 +98,8 @@ $ npm install react-visual-modeling butterfly-dag -S
 
 | 参数|  说明 | 类型| 默认值 |
 |---|---|---|---|
-|enable| 是否允许节点收缩 | boolean| - |
-| defaultMode |默认展示形式  |  string| 默认以"展开/收缩"形式展示 |
+|enable| 是否允许节点收缩 | `boolean` | - |
+| defaultMode |默认展示形式  |  `string` | 默认以"展开/收缩"形式展示 |
 
 <br>
 
@@ -109,12 +109,12 @@ $ npm install react-visual-modeling butterfly-dag -S
 
 |参数|说明|类型|默认值|
 |---|---|---|---|
-| enable | 是否开启缩略图 | boolean| false |
+| enable | 是否开启缩略图 | `boolean` | false |
 | config |  缩略图的配置 | [minimap props](#minimap-config-prop) | {} |
 
 <br>
 
-### Minimap Config
+### minimap config
 
 > 缩略图的配置
 
