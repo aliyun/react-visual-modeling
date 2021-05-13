@@ -1,11 +1,15 @@
-'use strict';
-
-import TableNode from './canvas/node';
-import Edge from './canvas/edge';
 import * as _ from 'lodash';
 
-export let transformInitData = (info) => {
-  let {columns, data, config, nodeMenu, edgeMenu, emptyContent, emptyWidth} = info;
+import Edge from './canvas/edge';
+import TableNode from './canvas/node';
+
+export const transformInitData = (info) => {
+  let {
+    columns, data, config,
+    nodeMenu, edgeMenu, emptyContent,
+    emptyWidth
+  } = info;
+
   let nodes = (data.nodes || []).map((item) => {
     return _.assign(item, {
       _columns: columns,
@@ -16,6 +20,7 @@ export let transformInitData = (info) => {
       _emptyContent: emptyContent
     });
   });
+
   let edges = (data.edges || []).map((item) => {
     return _.assign(item, {
       id: `${item.source}-${item.target}`,
@@ -32,37 +37,29 @@ export let transformInitData = (info) => {
   }
 }
 
-export let transformChangeData = (data) => {
 
-}
+export const diffPropsData = (newData, oldData, columns) => {
+  const isSameNode = (a, b) => a.id === b.id;
+  let addNodes = _.differenceWith(newData.nodes, oldData.nodes, isSameNode);
+  let rmNodes = _.differenceWith(oldData.nodes, newData.nodes, isSameNode);
 
-export let diffPropsData = (newData, oldData, columns) => {
-  let addNodes = _.differenceWith(newData.nodes, oldData.nodes, (a, b) => {
-    return a.id === b.id;
-  });
-  let rmNodes = _.differenceWith(oldData.nodes, newData.nodes, (a, b) => {
-    return a.id === b.id;
-  });
-  let addEdges = _.differenceWith(newData.edges, oldData.edges, (a, b) => {
+  const isSameEdge = (a, b) => {
     return (
       a.sourceNode === b.sourceNode &&
       a.targetNode === b.targetNode &&
       a.sourceEndpoint === b.sourceEndpoint &&
       a.targetEndpoint === b.targetEndpoint
     );
-  });
-  let rmEdges = _.differenceWith(oldData.edges, newData.edges, (a, b) => {
-    return (
-      a.sourceNode === b.sourceNode &&
-      a.targetNode === b.targetNode &&
-      a.sourceEndpoint === b.sourceEndpoint &&
-      a.targetEndpoint === b.targetEndpoint
-    );
-  });
+  }
+
+  let addEdges = _.differenceWith(newData.edges, oldData.edges, isSameEdge);
+  let rmEdges = _.differenceWith(oldData.edges, newData.edges, isSameEdge);
+
   let updateTitle = [];
   let addFields = [];
   let rmFields = [];
   let updateFields = [];
+
   (newData.nodes || []).forEach((newNode) => {
     let _addFields = [];
     let _rmFields = [];
@@ -84,12 +81,15 @@ export let diffPropsData = (newData, oldData, columns) => {
     let _primaryKey = _.find(columns, (item) => {
       return item.primaryKey;
     }).key;
+
     _addFields = _.differenceWith(newNode.fields, oldNode.fields, (a, b) => {
       return a[_primaryKey] === b[_primaryKey];
     });
+
     _rmFields = _.differenceWith(oldNode.fields, newNode.fields, (a, b) => {
       return a[_primaryKey] === b[_primaryKey];
     });
+
     newNode.fields.forEach((newField) => {
       let oldField = _.find(oldNode.fields, (item) => {
         return newField[_primaryKey] === item[_primaryKey];
@@ -119,6 +119,7 @@ export let diffPropsData = (newData, oldData, columns) => {
       fields: _updateFields
     });
   });
+
   return {
     addNodes,
     rmNodes,

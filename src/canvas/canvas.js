@@ -1,6 +1,5 @@
-'use strict';
-
 import {Canvas} from 'butterfly-dag';
+
 import CollapseMenuGen from './collapse-menu.jsx';
 
 export default class TableCanvas extends Canvas {
@@ -12,6 +11,7 @@ export default class TableCanvas extends Canvas {
     this._enableFocusChain = opts.data.enableFocusChain;
     this.attachEvent();
   }
+
   attachEvent() {
     // 线段删除特殊处理
     this.on('custom.endpoint.dragNode', (data) => {
@@ -23,6 +23,7 @@ export default class TableCanvas extends Canvas {
         data: linkedPoint
       });
     });
+
     if (this._enableHoverChain) {
       this.on('custom.endpoint.hover', (data) => {
         let point = data.point;
@@ -39,12 +40,15 @@ export default class TableCanvas extends Canvas {
         this.focusChain(point.nodeId, point.id, 'focus-chain');
       });
     }
+
     this.on('custom.node.expand', (data) => {
       this.expand(data.nodeId);
     });
+
     this.on('custom.node.collapse', (data) => {
       this.collapse(data.nodeId);
     });
+
     this.on('custom.edge.showCollapseInfo', (data) => {
       const {container, pos, edge} = data;
       CollapseMenuGen({
@@ -67,7 +71,7 @@ export default class TableCanvas extends Canvas {
         });
       });
     });
-    //system.nodes.delete
+
     this.on('system.nodes.delete', (data) => {
       data.nodes.forEach((item) => {
         this.originEdges = this.originEdges.filter((originLink) => {
@@ -76,6 +80,7 @@ export default class TableCanvas extends Canvas {
       })
     });
   }
+
   updateNodes(nodeInfos) {
     (nodeInfos.updateTitle || []).forEach((info) => {
       let node = this.getNode(info.nodeId);
@@ -94,6 +99,7 @@ export default class TableCanvas extends Canvas {
       node._updateFields(info.fields);
     });
   }
+
   expand(nodeId) {
     let node = this.getNode(nodeId);
     if (node) {
@@ -151,6 +157,7 @@ export default class TableCanvas extends Canvas {
       this.addEdges(newEdges, true);
     }
   }
+
   collapse(nodeId) {
     let node = this.getNode(nodeId);
     if (node) {
@@ -163,12 +170,9 @@ export default class TableCanvas extends Canvas {
       this.addEdges(newEdges, true);
     }
   }
+
   focusChain(nodeId, pointId, addClass) {
     let chain = this._findChain(nodeId, pointId);
-    // 后续看看单个endpoint需不需要focus
-    // if (chain.edges.length === 0) {
-    //   return;
-    // }
     chain.edges.forEach((item) => {
       item.focusChain(addClass);
     });
@@ -185,11 +189,9 @@ export default class TableCanvas extends Canvas {
       }
     }
   }
+
   unfocusChain(nodeId, pointId, rmClass) {
     let chain = this._findChain(nodeId, pointId);
-    // if (chain.edges.length === 0) {
-    //   return;
-    // }
     chain.edges.forEach((item) => {
       item.unfocusChain(rmClass);
     });
@@ -197,6 +199,7 @@ export default class TableCanvas extends Canvas {
       item.point.unfocusChain(rmClass);
     });
   }
+
   _findChain(nodeId, pointId) {
     let resultPoints = [];
     let resultEdges = [];
@@ -258,6 +261,7 @@ export default class TableCanvas extends Canvas {
       point: resultPoints
     }
   }
+
   unfocus() {
     if (this._focusItem && this._enableFocusChain) {
       this.unfocusChain(this._focusItem.nodeId, this._focusItem.pointId, 'focus-chain');

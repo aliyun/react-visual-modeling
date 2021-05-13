@@ -1,7 +1,5 @@
-'use strict';
-
-import {Endpoint} from 'butterfly-dag';
 import $ from 'jquery';
+import {Endpoint} from 'butterfly-dag';
 
 class NewEndPoint extends Endpoint {
   constructor(opts) {

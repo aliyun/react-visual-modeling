@@ -1,5 +1,3 @@
-'use strict';
-
 import $ from 'jquery';
 import * as _ from 'lodash';
 import { Node } from 'butterfly-dag';
@@ -18,12 +16,9 @@ export default class TableNode extends Node {
 
     // 每列宽度
     this.COLUMN_WIDTH = 60;
-
-    // 展开/收起的老线段
-    // this.oldEdges = [];
-    // 展开/收起的状态
     this.status = 'expand';
   }
+
   draw(obj) {
     let _dom = obj.dom;
     if (!_dom) {
@@ -69,25 +64,30 @@ export default class TableNode extends Node {
     $(this.dom).removeClass('focus');
     this.options.minimapActive = false;
   }
+
   _expand() {
     if (this.status === 'expand') {
       console.warn(`节点${this.id}已经是展开状态`)
       return;
     }
+
     // 清除新锚点
     this._rmTitleEndpoint();
+
     // 隐藏字段
     this.fieldsList.forEach((item) => {
-      $(item.dom).css('display', 'block');
+      $(item.dom).css('display', 'flex');
       let points = [
         this.getEndpoint(item.id),
         this.getEndpoint(`${item.id}-left`),
         this.getEndpoint(`${item.id}-right`),
       ]
+
       points.forEach((item) => {
         item.updatePos();
       });
     });
+
     // 记录状态
     this.status = 'expand';
     // 改变icon状态
@@ -220,6 +220,7 @@ export default class TableNode extends Node {
             _primaryKey = _col.key;
           }
         });
+
         let leftPoint = $('<div class="point left-point"></div>');
         let rightPoint = $('<div class="point right-point"></div>');
         fieldDom.append(leftPoint).append(rightPoint);

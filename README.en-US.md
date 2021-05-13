@@ -2,7 +2,7 @@
   A React-based DAG diagram for data visualization modeling, suitable for UML, database modeling, data warehouse construction and other businesses. 
 </h3>
 
-English| [简体中文](./README.md)
+English | [简体中文](./README.md)
 
 <p align="center">
   <img width="100%" src="https://img.alicdn.com/imgextra/i4/O1CN01VZxfyl1pOLc15k7XM_!!6000000005350-1-tps-1665-829.gif">

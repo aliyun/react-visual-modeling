@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Route, Link, Redirect} from 'react-router-dom';
@@ -23,50 +21,14 @@ class Component extends React.Component {
       data: {}
     };
   }
+
   componentWillMount() {
     this._data = _.cloneDeep(data);
     this.setState({
       data: this._data
     });
-    // setTimeout(() => {
-    //   let newData = _.cloneDeep(this.state.data);
-    //   newData.nodes.push({
-    //     top: 300,
-    //     left: 500,
-    //     id: 'ggg',
-    //     title: '我是新增的',
-    //     fields: [{
-    //       id: 'field_1',
-    //       type: 'string',
-    //       desc: '字段1'
-    //     }, {
-    //       id: 'field_2',
-    //       type: 'string',
-    //       desc: '字段2'
-    //     }, {
-    //       id: 'field_3',
-    //       type: 'string',
-    //       desc: '字段3'
-    //     }]
-    //   });
-    //   this.setState({
-    //     data: newData
-    //   });
-      // this._data = _.cloneDeep(data);
-      // this._data.nodes[0].fields[0].type = 'bigint';
-      // this._data.nodes[1].fields[0].type = 'bigint';
-      // this._data.nodes[1].fields[2].desc = '更改后';
-      // this.setState({
-      //   data: this._data
-      // });
-      // console.log(this.canvas);
-
-      // this.canvas.collapse('aaa');
-    // }, 10000);
-    // setTimeout(() => {
-    //   this.canvas.expand('aaa');
-    // }, 4000);
   }
+
   render() {
     return (
       <TableBuilding

@@ -1,5 +1,3 @@
-'use strict';
-
 export const columns = [{
   key: 'id',
   primaryKey: true,
