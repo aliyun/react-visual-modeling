@@ -220,6 +220,7 @@ export default class TableNode extends Node {
             _primaryKey = _col.key;
           }
         });
+
         let leftPoint = $('<div class="point left-point"></div>');
         let rightPoint = $('<div class="point right-point"></div>');
         fieldDom.append(leftPoint).append(rightPoint);
