@@ -64,25 +64,30 @@ export default class TableNode extends Node {
     $(this.dom).removeClass('focus');
     this.options.minimapActive = false;
   }
+
   _expand() {
     if (this.status === 'expand') {
       console.warn(`节点${this.id}已经是展开状态`)
       return;
     }
+
     // 清除新锚点
     this._rmTitleEndpoint();
+
     // 隐藏字段
     this.fieldsList.forEach((item) => {
-      $(item.dom).css('display', 'block');
+      $(item.dom).css('display', 'flex');
       let points = [
         this.getEndpoint(item.id),
         this.getEndpoint(`${item.id}-left`),
         this.getEndpoint(`${item.id}-right`),
       ]
+
       points.forEach((item) => {
         item.updatePos();
       });
     });
+
     // 记录状态
     this.status = 'expand';
     // 改变icon状态
