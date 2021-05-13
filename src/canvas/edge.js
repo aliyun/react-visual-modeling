@@ -1,8 +1,7 @@
-'use strict';
-
-import {Edge} from 'butterfly-dag';
 import $ from 'jquery';
+import {Edge} from 'butterfly-dag';
 import * as ReactDOM from 'react-dom';
+
 import RightMenuGen from './right-menu';
 
 export default class BaseEdge extends Edge {

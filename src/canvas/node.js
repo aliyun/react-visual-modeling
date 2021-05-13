@@ -1,5 +1,3 @@
-'use strict';
-
 import $ from 'jquery';
 import * as _ from 'lodash';
 import { Node } from 'butterfly-dag';
@@ -18,12 +16,9 @@ export default class TableNode extends Node {
 
     // 每列宽度
     this.COLUMN_WIDTH = 60;
-
-    // 展开/收起的老线段
-    // this.oldEdges = [];
-    // 展开/收起的状态
     this.status = 'expand';
   }
+
   draw(obj) {
     let _dom = obj.dom;
     if (!_dom) {

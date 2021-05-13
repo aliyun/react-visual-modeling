@@ -1,4 +1,3 @@
-'use strict';
 import $ from 'jquery';
 import * as ReactDOM from 'react-dom';
 
