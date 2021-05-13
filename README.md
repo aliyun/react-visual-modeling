@@ -35,16 +35,16 @@ $ npm install react-visual-modeling butterfly-dag -S
 |width|组件宽度|  `number` \| `string` |-|
 |height|组件高度| `number` \| `string` |-|
 |className|组件类名 | `string` |-|
-|columns| 列的配置描述, 见[columns props](#columns) | Array<[columns](#columns)> | |-|
+|columns| 列的配置描述, 见[columns props](#columns) | Array<[columns](#columns)> | - |
 |nodeMenu| 节点右键菜单配置|  Array<[menu](#menu-type)> | |  [ ]  |
 |edgeMenu| 线段右键菜单配置|  Array<[menu](#menu-type)> | |  [ ]  |
 |config| 组件的画布配置，见[config props](#config) | any | |-|
 |emptyContent|  当表字段为空时显示内容  |  `string` \| `JSX. Element`|  |-|
 |emptyWidth|  当表字段为空时表容器宽度 | `number` \| `string`| |-|
-|onLoaded| 渲染完毕事件  |`(canvas) => void|`|-|
-|onChange| 图内数据变化事件|`(data) => void`||-|
-|  onFocusNode  |聚焦节点事件  |`(node) => void`||-|
-|  onFocusEdge  |聚焦线段事件  |`(edge) => void`||-|
+|onLoaded| 渲染完毕事件  |`(canvas) => void` | - |
+|onChange| 图内数据变化事件|`(data) => void`| - |
+|  onFocusNode  |聚焦节点事件  |`(node) => void`| - |
+|  onFocusEdge  |聚焦线段事件  |`(edge) => void`| - |
 | onFocusCanvas |  聚焦空白处事件 | `() => void` |  |-|
 
 <br />
@@ -84,11 +84,11 @@ $ npm install react-visual-modeling butterfly-dag -S
 |---|---|---|---|
 |showActionIcon| 是否展示操作icon：放大，缩小，聚焦 | `boolean` |-|
 |allowKeyboard|允许键盘删除事件| `boolean` |-|
-|  collapse  |是否允许节点收缩| [collapse Prop](#collapse-prop) { }|-|
+|  collapse  |是否允许节点收缩| [collapse prop](#collapse-prop) { }|-|
 | titleRender|  节点title的渲染方法  | `(title) => void` |-|
 | titleExtIconRender | 节点右侧按钮的渲染方法 | `(node) => void` |-|
 | labelRender|  线段label的渲染方法  | `(label) => void` |-|
-|minimap  | 是否开启缩略图|  [minimap Prop](#minimap-prop) { }|-|
+|minimap  | 是否开启缩略图|  [minimap prop](#minimap-prop) { }|-|
 
 <br>
 
