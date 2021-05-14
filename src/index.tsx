@@ -127,6 +127,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
         let _oldTarget = _.get(item, 'targetEndpoint.id', '');
         let _newSource = _oldSource.indexOf('-right') !== -1 ? _oldSource : _oldSource + '-right';
         let _newTarget = _oldTarget.indexOf('-left') !== -1 ? _oldTarget : _oldTarget + '-left';
+
         return {
           id: item.options.id,
           sourceNode: item.options.sourceNode,
@@ -136,7 +137,8 @@ export default class TableBuilding extends React.Component<ComProps, any> {
           target: _newTarget,
           _menu: item.options._menu,
           _config: item.options._config,
-          type: 'endpoint'
+          type: 'endpoint',
+          label: item.label
         };
       });
 

@@ -117,6 +117,7 @@ export const data = {
     targetNode: 'bbb',
     source: 'field_1',
     target: 'field_1',
+    label: 'label'
   }, {
     id: 2,
     sourceNode: 'aaa',
