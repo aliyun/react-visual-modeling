@@ -27,7 +27,8 @@ export const transformInitData = (info) => {
       type: 'endpoint',
       _config: config,
       _menu: edgeMenu,
-      Class: Edge
+      Class: Edge,
+      label: item.label,
     });
   })
 
