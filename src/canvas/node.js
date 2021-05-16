@@ -3,7 +3,6 @@ import * as _ from 'lodash';
 import { Node } from 'butterfly-dag';
 import * as ReactDOM from 'react-dom';
 
-
 import emptyDom from './empty';
 import Endpoint from './endpoint';
 import RightMenuGen from './right-menu';
