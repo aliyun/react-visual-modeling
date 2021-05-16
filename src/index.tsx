@@ -60,6 +60,7 @@ interface action {
   icon: string | JSX.Element,                       // 图标
   title?: string;                                   // 提示
   onClick: (canvas: any) => void;                   // 点击响应函数
+  disable: boolean;                                 // 是否禁用
 }
 
 interface ComProps {
@@ -69,6 +70,7 @@ interface ComProps {
   columns: Array<columns>,                          // 跟antd的table的column的概念类似
   nodeMenu: Array<menu>,                            // 节点右键菜单配置
   edgeMenu: Array<menu>,                            // 线段右键菜单配置
+  actionMenu: action[],                             // action菜单
   config: config,                                   // 如上述配置
   data: any,                                        // 数据
   emptyWidth?: number | string,                     // 空数据时默认标题宽度
@@ -78,7 +80,6 @@ interface ComProps {
   onFocusNode(node: any): void,                     // 聚焦节点事件
   onFocusEdge(edge: any): void,                     // 聚焦线段事件
   onFocusCanvas(): void,                            // 聚焦空白处事件
-  getActions: (sysActions: action[]) => action[],   // 提供系统默认的 action, 返回新的 action
 
   // TODO: 展开/收缩节点
   // onDeteleNodes(nodeInfo: any): void,
@@ -352,7 +353,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
   }
 
   _createActionIcon() {
-    const {getActions = same} = this.props;
+    const {actionMenu = []} = this.props;
     let isShow = _.get(this, 'props.config.showActionIcon', true);
 
     if(!isShow) {
@@ -360,7 +361,31 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     }
 
     // 合并action菜单
-    const allActions = getActions(_.cloneDeep(actions));
+    let sysActions = _.cloneDeep(actions);
+    const allActions = [];
+
+    for(let action of actionMenu) {
+      const sysAction = _.find(sysActions, (a) => {
+        return a.key === action.key
+      });
+
+      if(!sysAction) {
+        allActions.push(action);
+
+        continue;
+      }
+
+      // 合并用户同名 key
+      _.merge(sysAction, action);
+      allActions.push(sysAction);
+      
+      // 移除用户覆盖的 action
+      sysActions = sysActions.filter(action => action.key !== sysAction.key);
+    }
+
+    sysActions.forEach(sysAction => {
+      allActions.unshift(sysAction);
+    });
 
     // 兼容多类型图标渲染
     const renderIcon = (icon) => {
@@ -379,6 +404,10 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       <div className='table-build-canvas-action'>
         {
           allActions.map(action => {
+            if(action.disable) {
+              return null;
+            }
+
             return (
               <div 
                 key={action.key} 

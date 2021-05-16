@@ -38,6 +38,7 @@ $ npm install react-visual-modeling butterfly-dag -S
 |columns| 列的配置描述, 见[columns props](#columns) | Array<[columns](#columns)> | - |
 |nodeMenu| 节点右键菜单配置|  Array<[menu](#menu-type)> |  [ ]  |
 |edgeMenu| 线段右键菜单配置|  Array<[menu](#menu-type)> |  [ ]  |
+|actionMenu | 右上角菜单配置 | `action[]` | [] | 
 |config| 组件的画布配置，见[config props](#config) | any | |-|
 |emptyContent|  当表字段为空时显示内容  |  `string` \| `JSX. Element`| - |
 |emptyWidth|  当表字段为空时表容器宽度 | `number` \| `string`| - |
@@ -46,7 +47,6 @@ $ npm install react-visual-modeling butterfly-dag -S
 |onFocusNode  |聚焦节点事件  |`(node) => void`| - |
 |onFocusEdge  |聚焦线段事件  |`(edge) => void`| - |
 |onFocusCanvas |  聚焦空白处事件 | `() => void` |  |-|
-| getActions | 自定义右上角菜单 | `(actions) => actions` | `same` |
 
 <br />
 
@@ -156,9 +156,10 @@ interface IProps {
   height?: number | string,                      // 组件高
   className?: string,                            // 组件classname
   columns: Array< columns > ,                    // 跟antd的table的column的概念类似
-  nodeMenu: Array< menu > ,                      // 节点右键菜单配置
-  edgeMenu: Array< menu > ,                      // 线段右键菜单配置
-  config: config,                                // 往下看
+  nodeMenu?: Array< menu > ,                     // 节点右键菜单配置
+  edgeMenu?: Array< menu > ,                     // 线段右键菜单配置
+  actionMenu?: action[],                         // 右上角菜单配置，默认配置的key为 zoom-in(缩小), zoom-out(放大), fit(适配画布)
+  config?: config,                               // 往下看
   data: IData,                                   // 数据入参，往下看
   emptyContent?: JSX.Element;                    // 当表字段为空时显示内容
   emptyWidth?: number | string;                  // 当表字段为空时表容器宽度
@@ -167,7 +168,6 @@ interface IProps {
   onFocusNode(node: any): void,                  // 聚焦节点事件
   onFocusEdge(edge: any): void,                  // 聚焦线段事件
   onFocusCanvas(): void,                         // 聚焦空白处事件
-  getActions: (actions: action[]) => action[]    // 设置action菜单
 };
 
 // 节点字段每列的属性设置
@@ -231,8 +231,51 @@ interface action {
   title: string;                                      // 名字
   icon: string | JSX.Element;                         // 图标
   onClick: (canvas: any) => void;                     // 响应函数
+  disable: boolean;                                   // false 则不显示
 }
 
 ```
+
+## 常用功能
+
+### 1. 隐藏默认 `actionMenu` 和添加自定义 `actionMenu`
+
+```jsx
+import {StarOutlined} from '@ant-design/icons';
+
+// 默认的三个 actionMenu 为 zoom-in, zoom-out, fit
+const actionMenu = [
+  {
+    key: 'zoom-in',
+    disable: true
+  },
+  {
+    icon: <StarOutlined />,
+    key: 'star',
+    onClick: () => {
+      alert('点击收藏！')
+    }
+  }
+]
+
+<ReactVisualModeling  actionMenu={actionMenu} />
+```
+
+### 2. 设置连线配置
+
+```jsx
+  const config = {
+     butterfly: {
+        theme: {
+          edge: {
+             shapeType: 'Manhattan',
+          }
+        }
+     }
+  }
+
+ <ReactVisualModeling  config={config} />
+```
+
 
 如需要更多定制的需求，您可以提issue或者参考[Butterfly](https://github.com/alibaba/butterfly)来定制您需要的需求

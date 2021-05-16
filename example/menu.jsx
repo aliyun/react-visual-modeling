@@ -1,3 +1,6 @@
+import React from 'react';
+import {StarOutlined} from '@ant-design/icons';
+
 // 节点菜单
 export const nodeMenu = [
   {
@@ -37,3 +40,17 @@ export const edgeMenu= [
     }
   }
 ];
+
+export const actionMenu = [
+  {
+    key: 'zoom-in',
+    disable: true
+  },
+  {
+    icon: <StarOutlined />,
+    key: 'star',
+    onClick: () => {
+      alert('点击收藏！')
+    }
+  }
+]

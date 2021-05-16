@@ -3,9 +3,8 @@ import _ from 'lodash';
 import ReactDOM from 'react-dom';
 import {Layout, Tooltip} from 'antd';
 import {BrowserRouter as Router} from 'react-router-dom';
-import {StarOutlined} from '@ant-design/icons';
 
-import {nodeMenu, edgeMenu} from './menu';
+import {nodeMenu, edgeMenu, actionMenu} from './menu';
 import TableBuilding from '../src/index.tsx';
 import * as MockData from './mock_data/data.jsx';
 
@@ -75,19 +74,6 @@ class Component extends React.Component {
     };
   }
 
-  getActions(actions) {
-    return [
-      ...actions,
-      {
-        icon: <StarOutlined />,
-        key: 'star',
-        onClick: () => {
-          alert('点击收藏！')
-        }
-      }
-    ]
-  }
-
   componentWillMount() {
     this._data = _.cloneDeep(data);
     this.setState({
@@ -134,10 +120,10 @@ class Component extends React.Component {
         // =========== 菜单相关属性 ===========
         nodeMenu={nodeMenu}
         edgeMenu={edgeMenu}
+        actionMenu={actionMenu}
 
         // =========== 画布配置 ===========
         config={config}
-        getActions={this.getActions}
       />
     )
   }
