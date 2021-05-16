@@ -2,9 +2,9 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import * as ReactDOM from 'react-dom';
 
-import Edge from './canvas/edge';
 import {Arrow} from 'butterfly-dag';
 import Canvas from './canvas/canvas';
+import {bfCfg, actions} from './config';
 import {transformInitData, diffPropsData} from './adaptor';
 
 import 'butterfly-dag/dist/index.css';
@@ -43,7 +43,8 @@ interface config {
     config: {
       nodeColor: any
     }
-  }
+  },
+  butterfly: any;                                 // 小蝴蝶的画布配置，参考：https://github.com/alibaba/butterfly/blob/dev/v4/docs/zh-CN/canvas.md
 }
 
 // 右键菜单配置
@@ -52,6 +53,13 @@ interface menu {
   key: string,
   render?(key: string): void,
   onClick?(node: any): void,
+}
+
+interface action {
+  key: string,                                      // 唯一表示
+  icon: string | JSX.Element,                       // 图标
+  title?: string;                                   // 提示
+  onClick: (canvas: any) => void;                   // 点击响应函数
 }
 
 interface ComProps {
@@ -70,6 +78,7 @@ interface ComProps {
   onFocusNode(node: any): void,                     // 聚焦节点事件
   onFocusEdge(edge: any): void,                     // 聚焦线段事件
   onFocusCanvas(): void,                            // 聚焦空白处事件
+  getActions: (sysActions: action[]) => action[],   // 提供系统默认的 action, 返回新的 action
 
   // TODO: 展开/收缩节点
   // onDeteleNodes(nodeInfo: any): void,
@@ -77,6 +86,9 @@ interface ComProps {
   // onConnectEdges(edgeInfo: any): void,
   // onReConnectEdges(addEdgeInfo: any, rmEdgeInfo: any): void,
 };
+
+const noop = () => null;
+const same = (params) => params;
 
 export default class TableBuilding extends React.Component<ComProps, any> {
   protected canvas: any;
@@ -100,7 +112,10 @@ export default class TableBuilding extends React.Component<ComProps, any> {
   }
 
   componentDidMount() {
+    const {beforeLoad = noop, config = {}} = this.props;
+
     let root = ReactDOM.findDOMNode(this) as HTMLElement;
+
     if (this.props.width !== undefined) {
       root.style.width = (this.props.width || 500) + 'px';
     }
@@ -121,6 +136,58 @@ export default class TableBuilding extends React.Component<ComProps, any> {
 
     this.canvasData = result;
 
+    this.canvas = new Canvas(
+      _.merge(
+        {},
+        // 默认配置
+        bfCfg,
+        // 用户配置
+        (config.butterfly || {}),
+        // 固定配置
+        {
+          root,
+          data: {
+            enableHoverChain: this._enableHoverChain,
+            enableFocusChain: this._enableFocusChain
+          }
+        }
+      )
+    );
+
+    beforeLoad({Arrow});
+
+    this.canvas.draw(result, () => {
+      this.props.onLoaded && this.props.onLoaded(this.canvas);
+      if (_.get(this, 'props.config.allowKeyboard')) {
+        document.addEventListener('keydown', this._deleteFocusItem.bind(this));
+      }
+      let minimap = _.get(this, 'props.config.minimap', {});
+
+      const minimapCfg = _.assign({}, minimap.config, {
+        events: [
+          'system.node.click',
+          'system.canvas.click'
+        ]
+      });
+
+      if (minimap && minimap.enable) {
+        this.canvas.setMinimap(true, minimapCfg);
+      }
+
+      if (_.get(this, 'props.config.collapse.defaultMode') === 'collapse') {
+        this.canvas.nodes.forEach((item) => {
+          this.canvas.collapse(item.id);
+        })
+      }
+    });
+
+    this.initEvents();
+  }
+
+  /**
+   * 初始化butterfly事件
+   */
+  initEvents() {
     let _addLinks = (links: any) => {
       let newLinkOpts = links.map((item: any) => {
         let _oldSource = _.get(item, 'sourceEndpoint.id', '');
@@ -151,70 +218,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
         }));
       });
     }
-
-    this.canvas = new Canvas({
-      root: root,
-      disLinkable: false,
-      linkable: true,
-      draggable: true,
-      zoomable: true,
-      moveable: true,
-      theme: {
-        edge: {
-          shapeType: 'AdvancedBezier',
-          arrow: true,
-          isExpandWidth: true,
-          arrowPosition: 1,
-          arrowOffset: 5,
-          Class: Edge
-        },
-        endpoint: {
-          expandArea: {
-            left: 0,
-            right: 0,
-            top: 0,
-            botton: 0
-          }
-        },
-        autoFixCanvas: {
-          enable: true,
-          autoMovePadding: [20, 20, 20, 20]
-        },
-      },
-      data: {
-        enableHoverChain: this._enableHoverChain,
-        enableFocusChain: this._enableFocusChain
-      }
-    });
-
-    this.props.beforeLoad({
-      Arrow
-    });
-
-    this.canvas.draw(result, () => {
-      this.props.onLoaded && this.props.onLoaded(this.canvas);
-      if (_.get(this, 'props.config.allowKeyboard')) {
-        document.addEventListener('keydown', this._deleteFocusItem.bind(this));
-      }
-      let minimap = _.get(this, 'props.config.minimap', {});
-
-      const minimapCfg = _.assign({}, minimap.config, {
-        events: [
-          'system.node.click',
-          'system.canvas.click'
-        ]
-      });
-
-      if (minimap && minimap.enable) {
-        this.canvas.setMinimap(true, minimapCfg);
-      }
-      if (_.get(this, 'props.config.collapse.defaultMode') === 'collapse') {
-        this.canvas.nodes.forEach((item) => {
-          this.canvas.collapse(item.id);
-        })
-      }
-    });
-
+    
     this.canvas.on('system.link.connect', (data: any) => {
       _addLinks(data.links || []);
       this.onConnectEdges(data.links);
@@ -348,35 +352,46 @@ export default class TableBuilding extends React.Component<ComProps, any> {
   }
 
   _createActionIcon() {
+    const {getActions = same} = this.props;
     let isShow = _.get(this, 'props.config.showActionIcon', true);
 
-    if (isShow) {
-      return (
-        <div className='table-build-canvas-action'>
-          <div
-            onClick={() => {
-              this.canvas.zoom(this.canvas._zoomData + 0.1);
-            }}
-          >
-            <i className="table-build-icon table-build-icon-zoom-in"></i>
-          </div>
-          <div
-            onClick={() => {
-              this.canvas.zoom(this.canvas._zoomData - 0.1);
-            }}
-          >
-            <i className="table-build-icon table-build-icon-zoom-out"></i>
-          </div>
-          <div
-            onClick={() => {
-              this.canvas.focusCenterWithAnimate();
-            }}>
-              <i className="table-build-icon table-build-icon-quanping2"></i>
-          </div>
-        </div>
-      );
+    if(!isShow) {
+      return null;
     }
-    return null;
+
+    // 合并action菜单
+    const allActions = getActions(_.cloneDeep(actions));
+
+    // 兼容多类型图标渲染
+    const renderIcon = (icon) => {
+      if(typeof icon === 'string') {
+        return <i className={icon} />
+      }
+
+      if(React.isValidElement(icon)) {
+        return icon;
+      }
+
+      return null;
+    }
+
+    return (
+      <div className='table-build-canvas-action'>
+        {
+          allActions.map(action => {
+            return (
+              <div 
+                key={action.key} 
+                title={action.title}
+                onClick={(canvas) => action.onClick(this.canvas)}
+              >
+                {renderIcon(action.icon)}
+              </div>
+            )
+          })
+        }
+      </div>
+    );
   }
 
   _genClassName() {
