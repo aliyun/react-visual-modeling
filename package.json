@@ -1,6 +1,6 @@
 {
   "name": "react-visual-modeling",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "一个基于React的数据可视化建模的DAG图，适用于UML，数据库建模，数据仓库建设等业务",
   "main": "dist/index.js",
   "pack": "pack/index.js",
@@ -10,7 +10,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c && cp -r ./src/static ./dist && cp -r ./src/static ./pack",
-    "dev": "rollup -w -c"
+    "dev": "rollup -w -c",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
