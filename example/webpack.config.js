@@ -18,7 +18,7 @@ module.exports = {
       path.resolve(process.cwd(), '../node_modules'),
       'node_modules'
     ],
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
   },
   module: {
     rules: [
