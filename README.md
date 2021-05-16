@@ -167,6 +167,7 @@ interface IProps {
   onFocusNode(node: any): void,                  // 聚焦节点事件
   onFocusEdge(edge: any): void,                  // 聚焦线段事件
   onFocusCanvas(): void,                         // 聚焦空白处事件
+  getActions: (actions: action[]) => action[]    // 设置action菜单
 };
 
 // 节点字段每列的属性设置
@@ -223,6 +224,15 @@ interface menu {
   render?: (key: string) => JSX.Element,             // 支持每列的自定义样式
   onClick?: (key: string, data: any) => void,        // 每列的点击回调
 }
+
+// action菜单（右上角）
+interface action {
+  key: string;                                        // 唯一标识
+  title: string;                                      // 名字
+  icon: string | JSX.Element;                         // 图标
+  onClick: (canvas: any) => void;                     // 响应函数
+}
+
 ```
 
 如需要更多定制的需求，您可以提issue或者参考[Butterfly](https://github.com/alibaba/butterfly)来定制您需要的需求
