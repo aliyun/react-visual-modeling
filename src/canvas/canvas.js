@@ -102,73 +102,85 @@ export default class TableCanvas extends Canvas {
 
   expand(nodeId) {
     let node = this.getNode(nodeId);
-    if (node) {
-      let oldEdges = this.getNeighborEdges(nodeId);
-      this.removeEdges(oldEdges, true);
-      node._expand();
-      let newEdges = [];
-      // 从全局展开图里面纠正线段
-      this.originEdges.forEach((item) => {
-        if (item.sourceNode === nodeId) {
-          let targetNode = this.getNode(item.targetNode);
-          if (targetNode.status === 'collapse') {
-            newEdges.push(_.assign({}, item, {
-              sourceNode: item.sourceNode,
-              source: `${item.source}-right`,
-              targetNode: item.targetNode,
-              target: `${targetNode.id}-left`
-            }));
-          } else {
-            newEdges.push(_.assign({}, item, {
-              sourceNode: item.sourceNode,
-              source: `${item.source}-right`,
-              targetNode: item.targetNode,
-              target: `${item.target}-left`
-            }));
-          }
-        } else if (item.targetNode == nodeId) {
-          let sourceNode = this.getNode(item.sourceNode);
-          if (sourceNode.status === 'collapse') {
-            newEdges.push(_.assign({}, item, {
-              sourceNode: item.sourceNode,
-              source: `${sourceNode.id}-right`,
-              targetNode: item.targetNode,
-              target: `${item.target}-left`
-            }));
-          } else {
-            newEdges.push(_.assign({}, item, {
-              sourceNode: item.sourceNode,
-              source: `${item.source}-right`,
-              targetNode: item.targetNode,
-              target: `${item.target}-left`
-            }));
-          }
-        }
-      });
-      // 去重
-      newEdges = _.uniqWith(newEdges, (a, b) => {
-        return (
-          a.sourceNode === b.sourceNode &&
-          a.targetNode === b.targetNode &&
-          a.souce === b.souce &&
-          a.target === b.target
-        );
-      });
-      this.addEdges(newEdges, true);
+
+    if(!node) {
+      return;
     }
+
+    let oldEdges = this.getNeighborEdges(nodeId);
+    this.removeEdges(oldEdges, true);
+    node._expand();
+    let newEdges = [];
+
+    // 从全局展开图里面纠正线段
+    this.originEdges.forEach((item) => {
+      if (item.sourceNode === nodeId) {
+        let targetNode = this.getNode(item.targetNode);
+        if (targetNode.status === 'collapse') {
+          newEdges.push(_.assign({}, item, {
+            sourceNode: item.sourceNode,
+            source: `${item.source}-right`,
+            targetNode: item.targetNode,
+            target: `${targetNode.id}-left`
+          }));
+        } else {
+          newEdges.push(_.assign({}, item, {
+            sourceNode: item.sourceNode,
+            source: `${item.source}-right`,
+            targetNode: item.targetNode,
+            target: `${item.target}-left`
+          }));
+        }
+      } else if (item.targetNode == nodeId) {
+        let sourceNode = this.getNode(item.sourceNode);
+        if (sourceNode.status === 'collapse') {
+          newEdges.push(_.assign({}, item, {
+            sourceNode: item.sourceNode,
+            source: `${sourceNode.id}-right`,
+            targetNode: item.targetNode,
+            target: `${item.target}-left`
+          }));
+        } else {
+          newEdges.push(_.assign({}, item, {
+            sourceNode: item.sourceNode,
+            source: `${item.source}-right`,
+            targetNode: item.targetNode,
+            target: `${item.target}-left`
+          }));
+        }
+      }
+    });
+    // 去重
+    newEdges = _.uniqWith(newEdges, (a, b) => {
+      return (
+        a.sourceNode === b.sourceNode &&
+        a.targetNode === b.targetNode &&
+        a.souce === b.souce &&
+        a.target === b.target
+      );
+    });
+
+    this.addEdges(newEdges, true);
+
+    this.emit('table.canvas.expand');
   }
 
   collapse(nodeId) {
     let node = this.getNode(nodeId);
-    if (node) {
-      let oldEdges = this.getNeighborEdges(nodeId);
-      let oldEdgesInfo = oldEdges.map((item) => {
-        return item.options;
-      });
-      this.removeEdges(oldEdges, true);
-      let newEdges = node._collapse(oldEdgesInfo);
-      this.addEdges(newEdges, true);
+    if(!node) {
+      return;
     }
+
+    let oldEdges = this.getNeighborEdges(nodeId);
+    let oldEdgesInfo = oldEdges.map((item) => {
+      return item.options;
+    });
+
+    this.removeEdges(oldEdges, true);
+    let newEdges = node._collapse(oldEdgesInfo);
+    this.addEdges(newEdges, true);
+
+    this.emit('table.canvas.collapse');
   }
 
   focusChain(nodeId, pointId, addClass) {
