@@ -2,9 +2,11 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import * as ReactDOM from 'react-dom';
 
+import {bfCfg} from './config';
 import {Arrow} from 'butterfly-dag';
 import Canvas from './canvas/canvas';
-import {bfCfg, actions} from './config';
+import EdgeRender from './component/edge-render'
+import ActionMenu, {action} from './component/action-menu';
 import {transformInitData, diffPropsData} from './adaptor';
 
 import 'butterfly-dag/dist/index.css';
@@ -55,21 +57,13 @@ interface menu {
   onClick?(node: any): void,
 }
 
-interface action {
-  key: string,                                      // 唯一表示
-  icon: string | JSX.Element,                       // 图标
-  title?: string;                                   // 提示
-  onClick: (canvas: any) => void;                   // 点击响应函数
-  disable: boolean;                                 // 是否禁用
-}
-
 interface ComProps {
   width?: number | string,                          // 组件宽
   height?: number | string,                         // 组件高
   className?: string,                               // 组件classname
-  columns: Array<columns>,                          // 跟antd的table的column的概念类似
-  nodeMenu: Array<menu>,                            // 节点右键菜单配置
-  edgeMenu: Array<menu>,                            // 线段右键菜单配置
+  columns: columns[],                               // 跟antd的table的column的概念类似
+  nodeMenu: menu[],                                 // 节点右键菜单配置
+  edgeMenu: menu[],                                 // 线段右键菜单配置
   actionMenu: action[],                             // action菜单
   config: config,                                   // 如上述配置
   data: any,                                        // 数据
@@ -89,7 +83,6 @@ interface ComProps {
 };
 
 const noop = () => null;
-const same = (params) => params;
 
 export default class TableBuilding extends React.Component<ComProps, any> {
   protected canvas: any;
@@ -159,10 +152,11 @@ export default class TableBuilding extends React.Component<ComProps, any> {
 
     this.canvas.draw(result, () => {
       this.props.onLoaded && this.props.onLoaded(this.canvas);
+      let minimap = _.get(this, 'props.config.minimap', {});
+
       if (_.get(this, 'props.config.allowKeyboard')) {
         document.addEventListener('keydown', this._deleteFocusItem.bind(this));
       }
-      let minimap = _.get(this, 'props.config.minimap', {});
 
       const minimapCfg = _.assign({}, minimap.config, {
         events: [
@@ -180,6 +174,8 @@ export default class TableBuilding extends React.Component<ComProps, any> {
           this.canvas.collapse(item.id);
         })
       }
+
+      this.forceUpdate();
     });
 
     this.initEvents();
@@ -189,6 +185,8 @@ export default class TableBuilding extends React.Component<ComProps, any> {
    * 初始化butterfly事件
    */
   initEvents() {
+    const {config, edgeMenu} = this.props;
+
     let _addLinks = (links: any) => {
       let newLinkOpts = links.map((item: any) => {
         let _oldSource = _.get(item, 'sourceEndpoint.id', '');
@@ -203,8 +201,8 @@ export default class TableBuilding extends React.Component<ComProps, any> {
           arrowShapeType: item.arrowShapeType,
           source: _newSource,
           target: _newTarget,
-          _menu: item.options._menu,
-          _config: item.options._config,
+          _menu: item.options._menu || edgeMenu,
+          _config: item.options._config || config,
           type: 'endpoint',
           label: item.label
         };
@@ -223,11 +221,15 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     this.canvas.on('system.link.connect', (data: any) => {
       _addLinks(data.links || []);
       this.onConnectEdges(data.links);
+
+      this.forceUpdate();
     });
 
     this.canvas.on('system.link.reconnect', (data: any) => {
       _addLinks(data.addLinks || []);
       this.onReConnectEdges(data.addLinks, data.delLinks);
+
+      this.forceUpdate();
     });
 
     this.canvas.on('system.node.click', (data: any) => {
@@ -248,7 +250,6 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       this.onDeteleNodes([data.node]);
     });
   }
-
 
   shouldComponentUpdate(newProps: ComProps, newState: any) {
     // 更新节点
@@ -302,6 +303,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     let linksInfo = links.map((item) => {
       return item.options;
     });
+
     this.props.onChange && this.props.onChange({
       type: 'system.link.connect',
       links: linksInfo
@@ -350,77 +352,6 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       type: 'system.link.delete',
       links: linksInfo
     });
-  }
-
-  _createActionIcon() {
-    const {actionMenu = []} = this.props;
-    let isShow = _.get(this, 'props.config.showActionIcon', true);
-
-    if(!isShow) {
-      return null;
-    }
-
-    // 合并action菜单
-    let sysActions = _.cloneDeep(actions);
-    const allActions = [];
-
-    for(let action of actionMenu) {
-      const sysAction = _.find(sysActions, (a) => {
-        return a.key === action.key
-      });
-
-      if(!sysAction) {
-        allActions.push(action);
-
-        continue;
-      }
-
-      // 合并用户同名 key
-      _.merge(sysAction, action);
-      allActions.push(sysAction);
-      
-      // 移除用户覆盖的 action
-      sysActions = sysActions.filter(action => action.key !== sysAction.key);
-    }
-
-    sysActions.forEach(sysAction => {
-      allActions.unshift(sysAction);
-    });
-
-    // 兼容多类型图标渲染
-    const renderIcon = (icon) => {
-      if(typeof icon === 'string') {
-        return <i className={icon} />
-      }
-
-      if(React.isValidElement(icon)) {
-        return icon;
-      }
-
-      return null;
-    }
-
-    return (
-      <div className='table-build-canvas-action'>
-        {
-          allActions.map(action => {
-            if(action.disable) {
-              return null;
-            }
-
-            return (
-              <div 
-                key={action.key} 
-                title={action.title}
-                onClick={(canvas) => action.onClick(this.canvas)}
-              >
-                {renderIcon(action.icon)}
-              </div>
-            )
-          })
-        }
-      </div>
-    );
   }
 
   _genClassName() {
@@ -476,11 +407,24 @@ export default class TableBuilding extends React.Component<ComProps, any> {
   }
 
   render() {
+    const {canvas} = this;
+    const {actionMenu} = this.props;
+    const actionMenuVisible = _.get(this, 'props.config.showActionIcon', true);
+    const labelRender = _.get(this, 'props.config.labelRender', noop);
+
     return (
       <div
         className={this._genClassName()}
       >
-        {this._createActionIcon()}
+        <ActionMenu 
+          canvas={canvas}
+          actionMenu={actionMenu}
+          visible={actionMenuVisible}
+        />
+        <EdgeRender
+          canvas={canvas}
+          labelRender={labelRender}
+        />
       </div>
     )
   }

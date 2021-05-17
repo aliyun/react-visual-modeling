@@ -11,7 +11,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c && cp -r ./src/static ./dist && cp -r ./src/static ./pack",
     "dev": "rollup -w -c",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "start": "cd example && npm start"
   },
   "repository": {
     "type": "git",
