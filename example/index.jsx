@@ -51,14 +51,22 @@ const config = {
       <Tooltip title="自定义title ext icon">
         <i 
           className="table-build-icon table-build-icon-iconfontxiaogantanhao"
-        ></i>
+        />
       </Tooltip>
     );
   },
   labelRender: (label) => {
+    if(!label) {
+      return (
+        <span className="visual-modeling-label">
+          connection
+        </span>
+      )
+    }
+
     return (
       <Tooltip title="自定义label">
-        <span>test label</span>
+        <span className="visual-modeling-label">{label}</span>
       </Tooltip>
     )
   }
