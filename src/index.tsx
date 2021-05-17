@@ -249,6 +249,14 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     this.canvas.on('custom.node.delete', (data: any) => {
       this.onDeteleNodes([data.node]);
     });
+
+    this.canvas.on('table.canvas.expand', () => {
+      this.forceUpdate();
+    });
+
+    this.canvas.on('table.canvas.collapse', () => {
+      this.forceUpdate();
+    });
   }
 
   shouldComponentUpdate(newProps: ComProps, newState: any) {
@@ -408,7 +416,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
 
   render() {
     const {canvas} = this;
-    const {actionMenu} = this.props;
+    const {actionMenu = []} = this.props;
     const actionMenuVisible = _.get(this, 'props.config.showActionIcon', true);
     const labelRender = _.get(this, 'props.config.labelRender', noop);
 
