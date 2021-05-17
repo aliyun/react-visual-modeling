@@ -22,6 +22,13 @@ const EdgeRender = (props: IProps) => {
       return null;
     }
 
+    const {sourceNode, targetNode} = edge;
+    const isCollapse = sourceNode.status === 'collapse' && targetNode.status === 'collapse'
+
+    if(isCollapse) {
+      return null;
+    }
+
     return (
       ReactDOM.createPortal(
         labelRender(edge.label, edge),

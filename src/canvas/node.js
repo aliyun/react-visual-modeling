@@ -92,6 +92,7 @@ export default class TableNode extends Node {
     // 改变icon状态
     $(this.dom).find('.table-build-icon-xiala').removeClass('collapse');
   }
+
   _collapse(oldEdges) { 
     if (this.status === 'collapse') {
       console.warn(`节点${this.id}已经是收缩状态`)
@@ -107,6 +108,7 @@ export default class TableNode extends Node {
     this.status = 'collapse';
     // 改变icon状态
     $(this.dom).find('.table-build-icon-xiala').addClass('collapse');
+
     // 生成新线段,并去重
     let newEdges = [];
     oldEdges.forEach((item) => {
@@ -116,7 +118,9 @@ export default class TableNode extends Node {
       } else if (item.targeNode = this.id) {
         updateObj['target'] = `${this.id}-left`;
       }
+
       let newEdgeObj = _.assign({}, item, updateObj);
+
       let hasExist = _.some(newEdges, (item) => {
         return (
           newEdgeObj.sourceNode === item.sourceNode &&
@@ -129,6 +133,7 @@ export default class TableNode extends Node {
         newEdges.push(newEdgeObj);
       }
     });
+
     return newEdges;
   }
   _createTableTitle(container = this.dom) {
@@ -305,10 +310,12 @@ export default class TableNode extends Node {
       }
     }
   }
+
   _addFields(fields) {
     let _newFieldsList = this._createFields($(this.dom), fields);
     this._createNodeEndpoint(_newFieldsList);
   }
+
   _rmFields(fields) {
     // 寻找primaryKey
     let columns = _.get(this, 'options._columns', []);
@@ -333,6 +340,7 @@ export default class TableNode extends Node {
       });
     });
   }
+
   _updateFields(fields) {
     let columns = _.get(this, 'options._columns', []);
     let _primaryKey = _.find(columns, (item) => {
@@ -390,10 +398,12 @@ export default class TableNode extends Node {
       disLinkable: false
     });
   }
+
   _rmTitleEndpoint() {
     this.removeEndpoint(`${this.id}-left`);
     this.removeEndpoint(`${this.id}-right`);
   }
+
   // 右键菜单
   _createRightMenu() {
     let menus = _.get(this, 'options._menu', []);

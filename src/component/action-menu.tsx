@@ -18,10 +18,14 @@ interface IProps {
 }
 
 const ActionMenu = (props: IProps) => {
-  const {canvas, actionMenu, visible} = props;
+  let {canvas, actionMenu = [], visible} = props;
 
   if(!visible) {
     return null;
+  }
+
+  if(!Array.isArray(actionMenu)) {
+    actionMenu = [];
   }
 
   // 合并action菜单
