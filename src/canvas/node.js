@@ -50,6 +50,12 @@ export default class TableNode extends Node {
     } else {
       $(this.dom).find('.title').css('width', this.options._emptyWidth || 150);
     }
+
+    $(this.dom).on('dblclick', (e) => {
+      this.emit('system.node.dblClick', {
+        node: this
+      });
+    });
     // 生成右键菜单
     this._createRightMenu();
   }

@@ -4,8 +4,8 @@ import ReactDOM from 'react-dom';
 import {Layout, Tooltip} from 'antd';
 import {BrowserRouter as Router} from 'react-router-dom';
 
-import TableBuilding from '../src/index.tsx';
 import {nodeMenu, edgeMenu, actionMenu} from './menu';
+import TableBuilding from '../src/index.tsx';
 import * as MockData from './mock_data/data.jsx';
 
 import 'antd/dist/antd.css';
@@ -89,31 +89,6 @@ class Component extends React.Component {
     });
   }
 
-  onAddEdge = () => {
-    const data = this.state.data;
-
-    data.edges.push({
-      "id": 1,
-      "sourceNode": "aaa",
-      "targetNode": "bbb",
-      "source": "field_1",
-      "target": "field_2"
-    });
-
-    this.setState({
-      data: {...data}
-    });
-  }
-
-  onDelEdge = () => {
-    const data = this.state.data;
-    data.edges.pop();
-
-    this.setState({
-      data: {...data}
-    });
-  }
-
   render() {
     return (
       <TableBuilding
@@ -137,6 +112,7 @@ class Component extends React.Component {
         // =========== 节点Table相关属性 ===========
         columns={this.state.columns}
         data={this.state.data}
+        onDblClickNode={(node) => {}}
         emptyContent={
           <div className="empty-content">
             <p className="desc">暂无数据</p>
@@ -146,16 +122,14 @@ class Component extends React.Component {
                 e.stopPropagation();
                 console.log('自定义空状态');
               }}
-            >
-              + 添加字段
-            </p>
+            >+ 添加字段</p>
           </div>
         }
 
         // =========== 菜单相关属性 ===========
         nodeMenu={nodeMenu}
         edgeMenu={edgeMenu}
-        actionMenu={actionMenu({onAddEdge: this.onAddEdge, onDelEdge: this.onDelEdge})}
+        actionMenu={actionMenu}
 
         // =========== 画布配置 ===========
         config={config}

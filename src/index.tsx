@@ -74,6 +74,7 @@ interface ComProps {
   onFocusNode(node: any): void,                     // 聚焦节点事件
   onFocusEdge(edge: any): void,                     // 聚焦线段事件
   onFocusCanvas(): void,                            // 聚焦空白处事件
+  onDblClickNode?(node: any): void,                 // 双击节点事件
 
   // TODO: 展开/收缩节点
   // onDeteleNodes(nodeInfo: any): void,
@@ -236,6 +237,10 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       this._focusNode(data.node);
     });
 
+    this.canvas.on('system.node.dblClick', (data: any) => {
+      this.props.onDblClickNode && this.props.onDblClickNode(data.node);
+    });
+
     this.canvas.on('system.link.click', (data: any) => {
       this._focusLink(data.edge);
     });
@@ -272,7 +277,6 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     });
 
     let diffInfo = diffPropsData(result, this.canvasData, this.props.columns);
-
     if (diffInfo.addNodes.length > 0) {
       this.canvas.addNodes(diffInfo.addNodes);
     }
@@ -282,9 +286,8 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     if (diffInfo.addEdges.length > 0) {
       this.canvas.addEdges(diffInfo.addEdges);
     }
-
     if (diffInfo.rmEdges.length > 0) {
-      this.canvas.removeEdges(diffInfo.rmEdges.map(edge => edge.id));
+      this.canvas.removeEdges(diffInfo.rmEdges);
     }
 
     // 更新节点中的字段
@@ -300,7 +303,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     }
 
     this.canvasData = result;
-    return true;
+    return false;
   }
 
   componentWillUnmount() {
@@ -358,7 +361,6 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     let linksInfo = links.map((item) => {
       return item.options;
     });
-
     this.props.onChange && this.props.onChange({
       type: 'system.link.delete',
       links: linksInfo

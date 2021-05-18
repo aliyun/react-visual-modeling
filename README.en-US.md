@@ -46,6 +46,7 @@ npm install react-visual-modeling
 |  onFocusNode  |                          focus node events                          |            <font color="c41d7f">(node) => void</font>            |    -    |
 |  onFocusEdge  |                          focus edge events                          |            <font color="c41d7f">(edge) => void</font>            |    -    |
 | onFocusCanvas |                      focus canvas blank events                      |              <font color="c41d7f">() => void</font>              |    -    |
+| onDblClickNode|                      double click node events                       |               <font color="c41d7f">() => void</font>             |    -    |
 
 <br>
 
@@ -141,6 +142,7 @@ import 'react-visual-modeling/dist/index.css';
   onFocusNode={() => {}}
   onFocusEdge={() => {}}
   onFocusCanvas={() => {}}
+  onDblClickNode={() => {}}
 >
 </VisualModeling>
 ```
