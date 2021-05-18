@@ -137,6 +137,7 @@ class Component extends React.Component {
         // =========== 节点Table相关属性 ===========
         columns={this.state.columns}
         data={this.state.data}
+        onDblClickNode={(node) => {}}
         emptyContent={
           <div className="empty-content">
             <p className="desc">暂无数据</p>

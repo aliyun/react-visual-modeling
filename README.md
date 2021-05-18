@@ -47,6 +47,7 @@ $ npm install react-visual-modeling butterfly-dag -S
 |onFocusNode  |聚焦节点事件  |`(node) => void`| - |
 |onFocusEdge  |聚焦线段事件  |`(edge) => void`| - |
 |onFocusCanvas |  聚焦空白处事件 | `() => void` |  |-|
+|onDblClickNode|  双击节点事件 |`(node) => void`| -
 
 <br />
 
@@ -144,6 +145,7 @@ import 'react-visual-modeling/dist/index.css';
   onFocusNode={() => {}}
   onFocusEdge={() => {}}
   onFocusCanvas={() => {}}
+  onDblClickNode={(node) => {}}     // Double Click Node Event
 />
 ```
 
@@ -168,6 +170,7 @@ interface IProps {
   onFocusNode(node: any): void,                  // 聚焦节点事件
   onFocusEdge(edge: any): void,                  // 聚焦线段事件
   onFocusCanvas(): void,                         // 聚焦空白处事件
+  onDblClickNode ? (node: any) : void,           // 双击节点事件
 };
 
 // 节点字段每列的属性设置
