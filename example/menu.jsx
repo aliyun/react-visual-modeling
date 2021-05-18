@@ -1,5 +1,5 @@
 import React from 'react';
-import {StarOutlined} from '@ant-design/icons';
+import {StarOutlined, PlusOutlined, MinusOutlined} from '@ant-design/icons';
 
 // 节点菜单
 export const nodeMenu = [
@@ -41,7 +41,10 @@ export const edgeMenu= [
   }
 ];
 
-export const actionMenu = [
+export const actionMenu = ({
+  onAddEdge,
+  onDelEdge
+}) => [
   {
     key: 'zoom-in',
     disable: true
@@ -51,6 +54,22 @@ export const actionMenu = [
     key: 'star',
     onClick: () => {
       alert('点击收藏！')
+    }
+  },
+  {
+    icon: <PlusOutlined />,
+    key: 'plus',
+    title: '添加一条连线',
+    onClick: () => {
+      onAddEdge();
+    }
+  },
+  {
+    icon: <MinusOutlined />,
+    key: 'minus',
+    title: '删除一条连线',
+    onClick: () => {
+      onDelEdge();
     }
   }
 ]
