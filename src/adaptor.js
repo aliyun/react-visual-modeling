@@ -23,21 +23,20 @@ export const transformInitData = (info) => {
 
   let edges = (data.edges || []).map((item) => {
     return _.assign(item, {
-      id: `${item.source}-${item.target}`,
+      id: `${item.sourceNode}-${item.source}-${item.targetNode}-${item.target}`,
       type: 'endpoint',
       _config: config,
       _menu: edgeMenu,
       Class: Edge,
       label: item.label,
     });
-  })
+  });
 
   return {
     nodes,
     edges
   }
 }
-
 
 export const diffPropsData = (newData, oldData, columns) => {
   const isSameNode = (a, b) => a.id === b.id;
@@ -48,8 +47,8 @@ export const diffPropsData = (newData, oldData, columns) => {
     return (
       a.sourceNode === b.sourceNode &&
       a.targetNode === b.targetNode &&
-      a.sourceEndpoint === b.sourceEndpoint &&
-      a.targetEndpoint === b.targetEndpoint
+      a.source === b.source &&
+      a.target === b.target
     );
   }
 
@@ -111,10 +110,12 @@ export const diffPropsData = (newData, oldData, columns) => {
       nodeId: newNode.id,
       fields: _addFields
     });
+
     _rmFields.length > 0 && rmFields.push({
       nodeId: newNode.id,
       fields: _rmFields
     });
+
     _updateFields.length > 0 && updateFields.push({
       nodeId: newNode.id,
       fields: _updateFields
