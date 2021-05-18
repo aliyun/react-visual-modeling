@@ -74,6 +74,7 @@ interface ComProps {
   onFocusNode(node: any): void,                     // 聚焦节点事件
   onFocusEdge(edge: any): void,                     // 聚焦线段事件
   onFocusCanvas(): void,                            // 聚焦空白处事件
+  onDblClickNode?(node: any): void,                 // 双击节点事件
 
   // TODO: 展开/收缩节点
   // onDeteleNodes(nodeInfo: any): void,
@@ -234,6 +235,10 @@ export default class TableBuilding extends React.Component<ComProps, any> {
 
     this.canvas.on('system.node.click', (data: any) => {
       this._focusNode(data.node);
+    });
+
+    this.canvas.on('system.node.dblClick', (data: any) => {
+      this.props.onDblClickNode && this.props.onDblClickNode(data.node);
     });
 
     this.canvas.on('system.link.click', (data: any) => {
