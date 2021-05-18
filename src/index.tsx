@@ -272,6 +272,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     });
 
     let diffInfo = diffPropsData(result, this.canvasData, this.props.columns);
+
     if (diffInfo.addNodes.length > 0) {
       this.canvas.addNodes(diffInfo.addNodes);
     }
@@ -281,8 +282,9 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     if (diffInfo.addEdges.length > 0) {
       this.canvas.addEdges(diffInfo.addEdges);
     }
+
     if (diffInfo.rmEdges.length > 0) {
-      this.canvas.removeEdges(diffInfo.rmEdges);
+      this.canvas.removeEdges(diffInfo.rmEdges.map(edge => edge.id));
     }
 
     // 更新节点中的字段
@@ -298,7 +300,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     }
 
     this.canvasData = result;
-    return false;
+    return true;
   }
 
   componentWillUnmount() {
@@ -356,6 +358,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     let linksInfo = links.map((item) => {
       return item.options;
     });
+
     this.props.onChange && this.props.onChange({
       type: 'system.link.delete',
       links: linksInfo
