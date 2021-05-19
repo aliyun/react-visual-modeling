@@ -103,8 +103,6 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     this._focusNodes = [];
     this._focusLinks = [];
 
-    this._columns = [];
-
     this._enableHoverChain = _.get(props, 'config.enableHoverChain', true);
     this._enableFocusChain = _.get(props, 'config.enableFocusChain', false);
   }
@@ -133,8 +131,6 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     });
 
     this.canvasData = result;
-
-    this._columns = this.props.columns;
 
     this.canvas = new Canvas(
       _.merge(
