@@ -89,6 +89,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
   protected canvas: any;
   protected canvasData: any;
   private _focusNodes: any;
+  private _columns: any;
   private _focusLinks: any;
   private _enableHoverChain: any;
   private _enableFocusChain: any;
@@ -101,6 +102,8 @@ export default class TableBuilding extends React.Component<ComProps, any> {
 
     this._focusNodes = [];
     this._focusLinks = [];
+
+    this._columns = [];
 
     this._enableHoverChain = _.get(props, 'config.enableHoverChain', true);
     this._enableFocusChain = _.get(props, 'config.enableFocusChain', false);
@@ -130,6 +133,8 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     });
 
     this.canvasData = result;
+
+    this._columns = this.props.columns;
 
     this.canvas = new Canvas(
       _.merge(
@@ -276,7 +281,10 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       emptyWidth: this.props.emptyWidth
     });
 
-    let diffInfo = diffPropsData(result, this.canvasData, this.props.columns);
+    let diffInfo = diffPropsData(result, this.canvasData, {
+      oldCol: this.props.columns,
+      newCol: newProps.columns
+    });
 
     if (diffInfo.addNodes.length > 0) {
       this.canvas.addNodes(diffInfo.addNodes);
@@ -297,7 +305,8 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       diffInfo.updateTitle.length > 0 ||
       diffInfo.updateFields.length > 0 ||
       diffInfo.addFields.length > 0 ||
-      diffInfo.rmFields.length
+      diffInfo.rmFields.length > 0 ||
+      diffInfo.newCol.length > 0
     );
 
     if (_isDiffNode) {

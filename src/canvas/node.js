@@ -200,12 +200,6 @@ export default class TableNode extends Node {
   }
   _createFields(container = this.dom, fieldList) {
     let fields = fieldList || _.get(this, 'options.fields');
-    if (fieldList && fieldList.length > 0) {
-      let optionFields = _.get(this, 'options.fields');
-      fieldList.forEach((item) => {
-        optionFields.push(item);
-      });
-    }
     let coloums = _.get(this, 'options._columns', []);
     let _primaryKey = coloums[0].key;
 
@@ -230,7 +224,6 @@ export default class TableNode extends Node {
             _primaryKey = _col.key;
           }
         });
-
         let leftPoint = $('<div class="point left-point"></div>');
         let rightPoint = $('<div class="point right-point"></div>');
         fieldDom.append(leftPoint).append(rightPoint);
@@ -256,9 +249,10 @@ export default class TableNode extends Node {
 
       const _newFieldItem = {
         id: 0,
+        __type: 'no-data',
         dom: noDataTree
       };
-      return _newFieldItem;
+      return [_newFieldItem];
     }
   }
   _createNodeEndpoint(fieldList) {
@@ -319,10 +313,12 @@ export default class TableNode extends Node {
 
   _addFields(fields) {
     let _newFieldsList = this._createFields($(this.dom), fields);
-    this._createNodeEndpoint(_newFieldsList);
+    if (_newFieldsList.length >= 1 && _.get(_newFieldsList, ['0', '__type']) !== 'no-data') {
+      this._createNodeEndpoint(_newFieldsList);
+    }
   }
 
-  _rmFields(fields) {
+  _rmFields(fields = this.fieldsList) {
     // 寻找primaryKey
     let columns = _.get(this, 'options._columns', []);
     let _primaryKey = columns[0].key;
@@ -375,6 +371,21 @@ export default class TableNode extends Node {
         }
       })
     });
+  }
+
+  // 更新col
+  _updateCol(newCol) {
+    let fields = this.fieldsList;
+    let ids = [];
+    fields.forEach((field) => {
+      ids = ids.concat([field.id, `${field.id}-left`, `${field.id}-right`]);
+    });
+    ids.forEach((id) => {
+      this.removeEndpoint(id);
+    });
+    this.fieldsList = [];
+    _.set(this, 'options._columns', newCol);
+    this._addFields();
   }
 
   _createTitleEndpoint() {

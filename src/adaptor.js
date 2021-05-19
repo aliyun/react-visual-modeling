@@ -38,7 +38,7 @@ export const transformInitData = (info) => {
   }
 }
 
-export const diffPropsData = (newData, oldData, columns) => {
+export const diffPropsData = (newData, oldData, options) => {
   const isSameNode = (a, b) => a.id === b.id;
   let addNodes = _.differenceWith(newData.nodes, oldData.nodes, isSameNode);
   let rmNodes = _.differenceWith(oldData.nodes, newData.nodes, isSameNode);
@@ -59,6 +59,16 @@ export const diffPropsData = (newData, oldData, columns) => {
   let addFields = [];
   let rmFields = [];
   let updateFields = [];
+  let newCol = [];
+  let columns = options.newCol;
+
+  // columns有变化
+  let addCol = _.differenceWith(options.newCol, options.oldCol, (a, b) => a.key === b.key);
+  let oldCol = _.differenceWith(options.oldCol, options.newCol, (a, b) => a.key === b.key);
+
+  if (addCol.length !== 0 || oldCol.length !== 0) {
+    newCol = options.newCol;
+  }
 
   (newData.nodes || []).forEach((newNode) => {
     let _addFields = [];
@@ -77,6 +87,7 @@ export const diffPropsData = (newData, oldData, columns) => {
         title: newNode.title
       });
     }
+
     // 列属性有变化
     let _primaryKey = _.find(columns, (item) => {
       return item.primaryKey;
@@ -130,6 +141,7 @@ export const diffPropsData = (newData, oldData, columns) => {
     updateTitle,
     addFields,
     rmFields,
-    updateFields
+    updateFields,
+    newCol
   };
 }
