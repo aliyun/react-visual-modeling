@@ -86,6 +86,13 @@ export default class TableCanvas extends Canvas {
       let node = this.getNode(info.nodeId);
       node._updateTitle(info.title);
     });
+    if (nodeInfos.newCol && nodeInfos.newCol.length > 0) {
+      let edges = this.edges.map(item => item);
+      this.nodes.forEach((item) => {
+        item._updateCol(nodeInfos.newCol);
+      });
+      this.addEdges(edges, true);
+    }
     (nodeInfos.addFields || []).forEach((info) => {
       let node = this.getNode(info.nodeId);
       node._addFields(info.fields);
