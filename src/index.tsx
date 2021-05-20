@@ -300,11 +300,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
 
   shouldComponentUpdate(newProps: ComProps, newState: any) {
 
-    if(newProps.selectable) {
-      this.canvas.setSelectMode(true);
-    } else {
-      this.canvas.setSelectMode(false);
-    }
+    this.canvas.setSelectMode(!!newProps.selectable);
 
     // 更新节点
     let result = transformInitData({
