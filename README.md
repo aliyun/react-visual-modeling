@@ -47,7 +47,9 @@ $ npm install react-visual-modeling butterfly-dag -S
 |onFocusNode  |聚焦节点事件  |`(node) => void`| - |
 |onFocusEdge  |聚焦线段事件  |`(edge) => void`| - |
 |onFocusCanvas |  聚焦空白处事件 | `() => void` |  |-|
-|onDblClickNode|  双击节点事件 |`(node) => void`| -
+|onDblClickNode|  双击节点事件 |`(node) => void`| - |
+| selectable | 是否开启框选 | `boolean` | false |
+|onSelect | 框选事件 | `(nodes, edges) => void`| - |
 
 <br />
 
@@ -171,6 +173,8 @@ interface IProps {
   onFocusEdge(edge: any): void,                  // 聚焦线段事件
   onFocusCanvas(): void,                         // 聚焦空白处事件
   onDblClickNode ? (node: any) : void,           // 双击节点事件
+  onSelect(nodes: any, edges: any): void,        // 画布框选事件
+  selectable: boolean,                           // 是否可框选
 };
 
 // 节点字段每列的属性设置
@@ -278,6 +282,19 @@ const actionMenu = [
   }
 
  <ReactVisualModeling  config={config} />
+```
+
+### 3. 实现框选功能
+```jsx
+  // 框选结果
+  const onSelect = (nodes, edges) => {
+    console.log(nodes, edges);
+  }
+
+ <ReactVisualModeling 
+    onSelect={onSelect}
+    selectable
+  />
 ```
 
 

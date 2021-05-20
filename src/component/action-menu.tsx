@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 
 import {actions} from '../config';
+import Tooltip from './tooltip/index';
 
 export interface action {
   key: string,                                      // 唯一表示
@@ -82,7 +83,9 @@ const ActionMenu = (props: IProps) => {
               title={action.title}
               onClick={() => action.onClick(canvas)}
             >
-              {renderIcon(action.icon)}
+              <Tooltip title={action.title}>
+                {renderIcon(action.icon)}
+              </Tooltip>
             </div>
           )
         })

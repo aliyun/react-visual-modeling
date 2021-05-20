@@ -1,0 +1,51 @@
+.react-visual-modeling-tooltip {
+  position: relative;
+  display: block;
+  height: 100%;
+  width: 100%;
+
+  &:hover {
+    .react-visual-modeling-title {
+      display: block;
+    }
+  }
+
+  .react-visual-modeling-title {
+    display: none;
+
+    word-wrap: break-word;
+    background-color: rgba(0,0,0,.75);
+    border-radius: 2px;
+    box-shadow: 0 3px 6px -4px rgba(0,0,0,12%), 0 6px 16px 0 rgba(0,0,0,8%), 0 9px 28px 8px rgba(0,0,0,5%);
+    color: #fff;
+    min-height: 32px;
+    min-width: 30px;
+    padding: 0 8px;
+    line-height: 32px;
+    text-align: left;
+    text-decoration: none;
+    position: absolute;
+    right: calc(100% + 5px);
+    white-space: nowrap;
+    top: 50%;
+    height: 32px;
+    transform: translateY(-50%);
+
+    &::before {
+      background-color: rgba(0, 0, 0, 0.75);
+      content: " ";
+      display: block;
+      height: 5px;
+      margin: auto;
+      pointer-events: auto;
+      position: absolute;
+      width: 5px;
+      display: block;
+      position: absolute;
+      right: -2px;
+      top: 50%;
+      box-shadow: 3px 3px 7px rgba(0,0,0,7%);
+      transform: translateY(-50%) rotate(45deg);
+    }
+  }
+}

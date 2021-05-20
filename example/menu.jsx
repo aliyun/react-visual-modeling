@@ -1,5 +1,8 @@
 import React from 'react';
-import {StarOutlined, PlusOutlined, MinusOutlined} from '@ant-design/icons';
+import {
+  StarOutlined, PlusOutlined, 
+  MinusOutlined, GatewayOutlined
+} from '@ant-design/icons';
 
 // 节点菜单
 export const nodeMenu = [
@@ -43,7 +46,8 @@ export const edgeMenu= [
 
 export const actionMenu = ({
   onAddEdge,
-  onDelEdge
+  onDelEdge,
+  onSetGridMode
 }) => [
   {
     key: 'zoom-in',
@@ -70,6 +74,14 @@ export const actionMenu = ({
     title: '删除一条连线',
     onClick: () => {
       onDelEdge();
+    }
+  },
+  {
+    icon: <GatewayOutlined />,
+    title: '框选',
+    key: 'select',
+    onClick: () => {
+      onSetGridMode();
     }
   }
 ]

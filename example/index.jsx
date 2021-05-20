@@ -78,7 +78,8 @@ class Component extends React.Component {
     this.canvas = null;
     this.state = {
       columns: _.cloneDeep(columns),
-      data: {}
+      data: {},
+      selectable: false
     };
   }
 
@@ -114,7 +115,15 @@ class Component extends React.Component {
     });
   }
 
+  onSetGridMode = () => {
+    this.setState({
+      selectable: true
+    });
+  }
+
   render() {
+    const {selectable} = this.state;
+
     return (
       <TableBuilding
         // =========== 画布事件 ===========
@@ -156,10 +165,22 @@ class Component extends React.Component {
         // =========== 菜单相关属性 ===========
         nodeMenu={nodeMenu}
         edgeMenu={edgeMenu}
-        actionMenu={actionMenu({onAddEdge: this.onAddEdge, onDelEdge: this.onDelEdge})}
+        actionMenu={actionMenu({
+          onAddEdge: this.onAddEdge,
+          onDelEdge: this.onDelEdge,
+          onSetGridMode: this.onSetGridMode
+        })}
 
         // =========== 画布配置 ===========
         config={config}
+
+        // =========== 框选配置 ===========
+        selectable={selectable}
+        onSelect={() => {
+          this.setState({
+            selectable: false
+          })
+        }}
       />
     )
   }
