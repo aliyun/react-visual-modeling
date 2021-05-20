@@ -114,6 +114,10 @@ class Component extends React.Component {
     });
   }
 
+  onSetGridMode = () => {
+    this.canvas.setSelectMode(true);
+  }
+
   render() {
     return (
       <TableBuilding
@@ -156,7 +160,11 @@ class Component extends React.Component {
         // =========== 菜单相关属性 ===========
         nodeMenu={nodeMenu}
         edgeMenu={edgeMenu}
-        actionMenu={actionMenu({onAddEdge: this.onAddEdge, onDelEdge: this.onDelEdge})}
+        actionMenu={actionMenu({
+          onAddEdge: this.onAddEdge,
+          onDelEdge: this.onDelEdge,
+          onSetGridMode: this.onSetGridMode
+        })}
 
         // =========== 画布配置 ===========
         config={config}

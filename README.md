@@ -171,6 +171,7 @@ interface IProps {
   onFocusEdge(edge: any): void,                  // 聚焦线段事件
   onFocusCanvas(): void,                         // 聚焦空白处事件
   onDblClickNode ? (node: any) : void,           // 双击节点事件
+  onSelect(nodes: any, edges: any): void,        // 画布框选事件
 };
 
 // 节点字段每列的属性设置
@@ -278,6 +279,29 @@ const actionMenu = [
   }
 
  <ReactVisualModeling  config={config} />
+```
+
+### 3. 实现框选功能
+```jsx
+  let canvas;
+
+  const onLoaded = (cvs) => {
+    canvas = cvs;
+  }
+
+
+  // 触发框选事件
+  canvas.setSelectMode(true);
+
+  // 框选结果
+  const onSelect = (nodes, edges) => {
+    console.log(nodes, edges);
+  }
+
+ <ReactVisualModeling 
+    onLoaded={onLoaded}
+    onSelect={onSelect}
+  />
 ```
 
 

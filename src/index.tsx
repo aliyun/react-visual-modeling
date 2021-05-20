@@ -75,6 +75,7 @@ interface ComProps {
   onFocusEdge(edge: any): void,                     // 聚焦线段事件
   onFocusCanvas(): void,                            // 聚焦空白处事件
   onDblClickNode?(node: any): void,                 // 双击节点事件
+  onSelect(nodes: any, edges: any): void,           // 选中事件
 
   // TODO: 展开/收缩节点
   // onDeteleNodes(nodeInfo: any): void,
@@ -188,6 +189,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
    */
   initEvents() {
     const {config, edgeMenu} = this.props;
+    let isAfterSelect = false;
 
     let _addLinks = (links: any) => {
       let newLinkOpts = links.map((item: any) => {
@@ -242,11 +244,42 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       this.props.onDblClickNode && this.props.onDblClickNode(data.node);
     });
 
+    this.canvas.on('system.multiple.select', ({data}) => {
+      // 加这个判断是为了防止[system.canvas.click]事件和当前事件冲突
+      isAfterSelect = true;
+
+      const {nodes, edges} = data;
+      this._unfocus();
+
+      nodes.forEach(node => {
+        node.focus();
+        this._focusNodes.push(node);
+      });
+
+      edges.forEach(edge => {
+        edge.focus();
+        this._focusLinks.push(edge);
+      })
+
+      this.canvas.setSelectMode(false);
+
+      _.isFunction(this.props.onSelect) && this.props.onSelect(nodes, edges);
+
+      // 防止误触
+      setTimeout(() => {
+        isAfterSelect = false;
+      }, 100);
+    });
+
     this.canvas.on('system.link.click', (data: any) => {
       this._focusLink(data.edge);
     });
 
     this.canvas.on('system.canvas.click', (data: any) => {
+      if(isAfterSelect) {
+        return;
+      }
+
       this._unfocus();
       this.props.onFocusCanvas && this.props.onFocusCanvas();
       this.canvas.unfocus();
@@ -357,6 +390,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     let nodesInfo = nodes.map((item) => {
       return item.options;
     });
+
     this.props.onChange && this.props.onChange({
       type: 'system.node.delete',
       nodes: nodesInfo,
@@ -400,9 +434,11 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     this._focusNodes.forEach((item) => {
       item.unfocus();
     });
+
     this._focusLinks.forEach((item) => {
       item.unfocus();
     });
+
     this._focusNodes = [];
     this._focusLinks = [];
   }
