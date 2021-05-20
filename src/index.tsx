@@ -69,6 +69,7 @@ interface ComProps {
   data: any,                                        // 数据
   emptyWidth?: number | string,                     // 空数据时默认标题宽度
   emptyContent?: string | JSX.Element,              // 空数据显示内容
+  selectable: boolean;                              // 开启框选模式
   onLoaded(canvas: any, utils: any): void,          // 渲染完毕事件
   onChange(data: any): void,                        // 图内数据变化事件
   onFocusNode(node: any): void,                     // 聚焦节点事件
@@ -244,6 +245,20 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       this.props.onDblClickNode && this.props.onDblClickNode(data.node);
     });
 
+    this.canvas.on('system.link.click', (data: any) => {
+      this._focusLink(data.edge);
+    });
+
+    this.canvas.on('system.canvas.click', (data: any) => {
+      if(isAfterSelect) {
+        return;
+      }
+
+      this._unfocus();
+      this.props.onFocusCanvas && this.props.onFocusCanvas();
+      this.canvas.unfocus();
+    });
+
     this.canvas.on('system.multiple.select', ({data}) => {
       // 加这个判断是为了防止[system.canvas.click]事件和当前事件冲突
       isAfterSelect = true;
@@ -260,30 +275,14 @@ export default class TableBuilding extends React.Component<ComProps, any> {
         edge.focus();
         this._focusLinks.push(edge);
       })
-
-      this.canvas.setSelectMode(false);
-
+  
       _.isFunction(this.props.onSelect) && this.props.onSelect(nodes, edges);
 
       // 防止误触
       setTimeout(() => {
         isAfterSelect = false;
       }, 100);
-    });
-
-    this.canvas.on('system.link.click', (data: any) => {
-      this._focusLink(data.edge);
-    });
-
-    this.canvas.on('system.canvas.click', (data: any) => {
-      if(isAfterSelect) {
-        return;
-      }
-
-      this._unfocus();
-      this.props.onFocusCanvas && this.props.onFocusCanvas();
-      this.canvas.unfocus();
-    });
+    });    
 
     this.canvas.on('custom.node.delete', (data: any) => {
       this.onDeteleNodes([data.node]);
@@ -298,7 +297,15 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     });
   }
 
+
   shouldComponentUpdate(newProps: ComProps, newState: any) {
+
+    if(newProps.selectable) {
+      this.canvas.setSelectMode(true);
+    } else {
+      this.canvas.setSelectMode(false);
+    }
+
     // 更新节点
     let result = transformInitData({
       columns: this.props.columns,
