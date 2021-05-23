@@ -471,10 +471,14 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     const {actionMenu = []} = this.props;
     const actionMenuVisible = _.get(this, 'props.config.showActionIcon', true);
     const labelRender = _.get(this, 'props.config.labelRender', noop);
+    const selectable = !!this.props.selectable;
 
     return (
       <div
         className={this._genClassName()}
+        style={{
+          cursor: selectable ? 'crosshair' : 'default'
+        }}
       >
         <ActionMenu 
           canvas={canvas}
