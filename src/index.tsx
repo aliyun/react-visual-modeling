@@ -322,7 +322,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       this.canvas.addNodes(diffInfo.addNodes);
     }
     if (diffInfo.rmNodes.length > 0) {
-      this.canvas.removeNodes(diffInfo.rmNodes);
+      this.canvas.removeNodes(diffInfo.rmNodes.map((item) => item.id));
     }
     if (diffInfo.addEdges.length > 0) {
       this.canvas.addEdges(diffInfo.addEdges);
