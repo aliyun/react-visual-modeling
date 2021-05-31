@@ -8,13 +8,20 @@ export default class BaseEdge extends Edge {
     // todo 这块可以优化
     this._createRightMenu();
 
-    $(this.eventHandlerDom).on('dblClick',(e) => {
+    $(this.eventHandlerDom).on('dblclick',(e) => {
       e.preventDefault();
       e.stopPropagation();
       this.emit('custom.edge.dblClick',{
         edge: this
       });
-    })
+    });
+    $(this.labelDom).on('dblclick',(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.emit('custom.edge.dblClick',{
+        edge: this
+      });
+    });
   }
 
   draw(obj) {
