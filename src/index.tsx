@@ -76,6 +76,7 @@ interface ComProps {
   onFocusEdge(edge: any): void,                     // 聚焦线段事件
   onFocusCanvas(): void,                            // 聚焦空白处事件
   onDblClickNode?(node: any): void,                 // 双击节点事件
+  onDblClickEdge?(edge: any): void,                 // 双击线段事件
   onSelect(nodes: any, edges: any): void,           // 选中事件
 
   // TODO: 展开/收缩节点
@@ -235,6 +236,10 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       this.onReConnectEdges(data.addLinks, data.delLinks);
 
       this.forceUpdate();
+    });
+
+    this.canvas.on('custom.edge.dblClick', (data: any) => {
+      this.props.onDblClickEdge && this.props.onDblClickEdge(data.edge);
     });
 
     this.canvas.on('system.node.click', (data: any) => {
