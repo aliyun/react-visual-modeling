@@ -7,6 +7,14 @@ export default class BaseEdge extends Edge {
   mounted() {
     // todo 这块可以优化
     this._createRightMenu();
+
+    $(this.eventHandlerDom).on('dblClick',(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.emit('custom.edge.dblClick',{
+        edge: this
+      });
+    })
   }
 
   draw(obj) {
