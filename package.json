@@ -25,8 +25,8 @@
     "react-data-mapping": "^1.1.2"
   },
   "peerDependencies": {
-    "react": ">15.6.1",
-    "react-dom": ">15.6.1",
+    "react": ">15.6.1, <17.0.0",
+    "react-dom": ">15.6.1, <17.0.0",
     "lodash": "^4.17.20"
   },
   "devDependencies": {

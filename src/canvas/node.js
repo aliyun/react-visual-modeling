@@ -238,15 +238,16 @@ export default class TableNode extends Node {
     } else {
       const _emptyContent = _.get(this.options, '_emptyContent');
       const noDataCon = $('<div></div>');
-      container.append(noDataCon);
+      // container.append(noDataCon);
       const noDataTree = emptyDom({
         content: _emptyContent,
         container: noDataCon,
         width: this.options._emptyWidth
       });
-
-      container.append(noDataTree);
-
+      if(container[0].children.length < 3){
+        container.append(noDataCon);
+        container.append(noDataTree);
+      }
       const _newFieldItem = {
         id: 0,
         __type: 'no-data',
@@ -312,6 +313,7 @@ export default class TableNode extends Node {
   }
 
   _addFields(fields) {
+    $(this.dom).find('.no-data').remove();
     let _newFieldsList = this._createFields($(this.dom), fields);
     if (_newFieldsList.length >= 1 && _.get(_newFieldsList, ['0', '__type']) !== 'no-data') {
       this._createNodeEndpoint(_newFieldsList);
