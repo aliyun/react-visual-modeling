@@ -316,6 +316,7 @@ export default class TableNode extends Node {
 
   _addFields(fields) {
     $(this.dom).find('.no-data').remove();
+    this.emptyDataTree = undefined;
     let _newFieldsList = this._createFields($(this.dom), fields);
     if (_newFieldsList.length >= 1 && _.get(_newFieldsList, ['0', '__type']) !== 'no-data') {
       this._createNodeEndpoint(_newFieldsList);
@@ -379,7 +380,6 @@ export default class TableNode extends Node {
 
   // 更新col
   _updateCol(newCol) {
-    this.emptyDataTree = undefined;
     let fields = this.fieldsList;
     let ids = [];
     fields.forEach((field) => {
