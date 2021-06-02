@@ -16,6 +16,7 @@ export default class TableNode extends Node {
     // 每列宽度
     this.COLUMN_WIDTH = 60;
     this.status = 'expand';
+    this.emptyDataTree = undefined;
   }
 
   draw(obj) {
@@ -236,23 +237,24 @@ export default class TableNode extends Node {
         return _newFieldItem;
       });
     } else {
+      if(this.emptyDataTree){
+        return this.emptyDataTree;
+      }
       const _emptyContent = _.get(this.options, '_emptyContent');
       const noDataCon = $('<div></div>');
-      // container.append(noDataCon);
+      container.append(noDataCon);
       const noDataTree = emptyDom({
         content: _emptyContent,
         container: noDataCon,
         width: this.options._emptyWidth
       });
-      if(container[0].children.length < 3){
-        container.append(noDataCon);
-        container.append(noDataTree);
-      }
+      container.append(noDataTree);
       const _newFieldItem = {
         id: 0,
         __type: 'no-data',
         dom: noDataTree
       };
+      this.emptyDataTree = [_newFieldItem];
       return [_newFieldItem];
     }
   }
@@ -377,6 +379,7 @@ export default class TableNode extends Node {
 
   // 更新col
   _updateCol(newCol) {
+    this.emptyDataTree = undefined;
     let fields = this.fieldsList;
     let ids = [];
     fields.forEach((field) => {
