@@ -16,6 +16,7 @@ export default class TableNode extends Node {
     // 每列宽度
     this.COLUMN_WIDTH = 60;
     this.status = 'expand';
+    this.emptyDataTree = undefined;
   }
 
   draw(obj) {
@@ -236,6 +237,9 @@ export default class TableNode extends Node {
         return _newFieldItem;
       });
     } else {
+      if(this.emptyDataTree){
+        return this.emptyDataTree;
+      }
       const _emptyContent = _.get(this.options, '_emptyContent');
       const noDataCon = $('<div></div>');
       container.append(noDataCon);
@@ -244,14 +248,13 @@ export default class TableNode extends Node {
         container: noDataCon,
         width: this.options._emptyWidth
       });
-
       container.append(noDataTree);
-
       const _newFieldItem = {
         id: 0,
         __type: 'no-data',
         dom: noDataTree
       };
+      this.emptyDataTree = [_newFieldItem];
       return [_newFieldItem];
     }
   }
@@ -312,6 +315,8 @@ export default class TableNode extends Node {
   }
 
   _addFields(fields) {
+    $(this.dom).find('.no-data').remove();
+    this.emptyDataTree = undefined;
     let _newFieldsList = this._createFields($(this.dom), fields);
     if (_newFieldsList.length >= 1 && _.get(_newFieldsList, ['0', '__type']) !== 'no-data') {
       this._createNodeEndpoint(_newFieldsList);
