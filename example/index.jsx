@@ -181,6 +181,14 @@ class Component extends React.Component {
             selectable: false
           })
         }}
+
+        beforeDeleteNode={(nodes) => {
+          // 返回false或者Promise.reject则不会删除
+        }}
+        beforeDeleteEdge={(edges) => {
+          console.log(edges);
+          // 返回false或者Promise.reject则不会删除
+        }}
       />
     )
   }

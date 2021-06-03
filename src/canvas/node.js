@@ -185,7 +185,6 @@ export default class TableNode extends Node {
       this.emit('custom.node.delete', {
         node: this
       });
-      this.remove();
     });
     titleIcon.append(deleteIcon);
     let extIcon = $('<span class="title-ext-icon"></span>');
