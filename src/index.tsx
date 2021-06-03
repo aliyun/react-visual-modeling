@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import * as ReactDOM from 'react-dom';
+import {Promise} from 'es6-promise'
 
 import {bfCfg} from './config';
 import {Arrow} from 'butterfly-dag';
@@ -70,6 +71,8 @@ interface ComProps {
   emptyWidth?: number | string,                     // 空数据时默认标题宽度
   emptyContent?: string | JSX.Element,              // 空数据显示内容
   selectable: boolean;                              // 开启框选模式
+  beforeDeleteNode: Promise<any> | boolean,     // 删除节点前方法，可做二次删除确认
+  beforeDeleteEdge: Promise<any> | boolean,     // 删除线段前方法，可做二次删除确认
   onLoaded(canvas: any, utils: any): void,          // 渲染完毕事件
   onChange(data: any): void,                        // 图内数据变化事件
   onFocusNode(node: any): void,                     // 聚焦节点事件
@@ -80,8 +83,8 @@ interface ComProps {
   onSelect(nodes: any, edges: any): void,           // 选中事件
 
   // TODO: 展开/收缩节点
-  // onDeteleNodes(nodeInfo: any): void,
-  // onDeteleEdges(edgeInfo: any): void,
+  // onDeleteNodes(nodeInfo: any): void,
+  // onDeleteEdges(edgeInfo: any): void,
   // onConnectEdges(edgeInfo: any): void,
   // onReConnectEdges(addEdgeInfo: any, rmEdgeInfo: any): void,
 };
@@ -130,7 +133,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       edgeMenu: this.props.edgeMenu,
       data: _.cloneDeep(this.props.data),
       emptyContent: this.props.emptyContent,
-      emptyWidth: this.props.emptyWidth
+      emptyWidth: this.props.emptyWidth,
     });
 
     this.canvasData = result;
@@ -290,7 +293,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     });    
 
     this.canvas.on('custom.node.delete', (data: any) => {
-      this.onDeteleNodes([data.node]);
+      this.onDeleteNodes([data.node]);
     });
 
     this.canvas.on('table.canvas.expand', () => {
@@ -385,36 +388,58 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     });
   }
 
-  onDeteleNodes(nodes) {
-    let neighborLinksInfo = [];
-    nodes.forEach((node) => {
-      let links = this.canvas.getNeighborEdges(node.id);
-      let linksInfo = links.map((link) => {
-        return link.options;
-      });
-      neighborLinksInfo = neighborLinksInfo.concat(linksInfo);
-    })
+  onDeleteNodes(nodes) {
 
-    let nodesInfo = nodes.map((item) => {
-      return item.options;
-    });
+    let beforeDeleteNode = this.props.beforeDeleteNode || function() {return true};
 
-    this.props.onChange && this.props.onChange({
-      type: 'system.node.delete',
-      nodes: nodesInfo,
-      neighborLinks: neighborLinksInfo
-    });
+    Promise.resolve(beforeDeleteNode(nodes))
+      .then((result) => {
+        if (result === false) {
+          return false;
+        } else {
+          let neighborLinksInfo = [];
+          nodes.forEach((node) => {
+            let links = this.canvas.getNeighborEdges(node.id);
+            let linksInfo = links.map((link) => {
+              return link.options;
+            });
+            neighborLinksInfo = neighborLinksInfo.concat(linksInfo);
+
+            node.remove();
+          });
+
+          let nodesInfo = nodes.map((item) => {
+            return item.options;
+          });
+
+          this.props.onChange && this.props.onChange({
+            type: 'system.node.delete',
+            nodes: nodesInfo,
+            neighborLinks: neighborLinksInfo
+          });
+        }
+      }).catch(() => {});
   }
 
-  onDeteleEdges(links) {
-    let linksInfo = links.map((item) => {
-      return item.options;
-    });
+  onDeleteEdges(links) {
 
-    this.props.onChange && this.props.onChange({
-      type: 'system.link.delete',
-      links: linksInfo
-    });
+    let beforeDeleteEdge = this.props.beforeDeleteEdge || function() {return true};
+
+    Promise.resolve(beforeDeleteEdge(links))
+      .then((result) => {
+        if (result === false) {
+          return;
+        } else {
+          let linksInfo = links.map((item) => {
+            return item.options;
+          });
+      
+          this.props.onChange && this.props.onChange({
+            type: 'system.link.delete',
+            links: linksInfo
+          });
+        }
+      }).catch(() => {});
   }
 
   _genClassName() {
@@ -454,8 +479,8 @@ export default class TableBuilding extends React.Component<ComProps, any> {
   _deleteFocusItem(e) {
     // todo: 这块需要好好思考下
     if (e.key === 'Delete' || e.key === 'Backspace') {
-      this.onDeteleNodes(this._focusNodes);
-      this.onDeteleEdges(this._focusLinks);
+      this.onDeleteNodes(this._focusNodes);
+      this.onDeleteEdges(this._focusLinks);
     }
   }
 
