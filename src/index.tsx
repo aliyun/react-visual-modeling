@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import * as ReactDOM from 'react-dom';
+import $ from 'jquery';
 import {Promise} from 'es6-promise'
 
 import {bfCfg} from './config';
@@ -99,12 +100,14 @@ export default class TableBuilding extends React.Component<ComProps, any> {
   private _focusLinks: any;
   private _enableHoverChain: any;
   private _enableFocusChain: any;
+  private root: any;
   props: any;
 
   constructor(props: ComProps) {
     super(props);
     this.canvas = null;
     this.canvasData = null;
+    this.root = null;
 
     this._focusNodes = [];
     this._focusLinks = [];
@@ -117,6 +120,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     const {beforeLoad = noop, config = {}} = this.props;
 
     let root = ReactDOM.findDOMNode(this) as HTMLElement;
+    this.root = root;
 
     if (this.props.width !== undefined) {
       root.style.width = (this.props.width || 500) + 'px';
@@ -163,7 +167,8 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       let minimap = _.get(this, 'props.config.minimap', {});
 
       if (_.get(this, 'props.config.allowKeyboard')) {
-        document.addEventListener('keydown', this._deleteFocusItem.bind(this));
+        $(root).attr('tabindex', 0).focus();
+        root.addEventListener('keydown', this._deleteFocusItem.bind(this));
       }
 
       const minimapCfg = _.assign({}, minimap.config, {
@@ -230,7 +235,6 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     this.canvas.on('system.link.connect', (data: any) => {
       _addLinks(data.links || []);
       this.onConnectEdges(data.links);
-
       this.forceUpdate();
     });
 
@@ -246,6 +250,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     });
 
     this.canvas.on('system.node.click', (data: any) => {
+      $(this.root).attr('tabindex', 0).focus();
       this._focusNode(data.node);
     });
 
@@ -254,20 +259,24 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     });
 
     this.canvas.on('system.link.click', (data: any) => {
+      $(this.root).attr('tabindex', 0).focus();
       this._focusLink(data.edge);
     });
 
     this.canvas.on('system.canvas.click', (data: any) => {
+      $(this.root).attr('tabindex', 0).focus();
       if(isAfterSelect) {
         return;
       }
-
       this._unfocus();
       this.props.onFocusCanvas && this.props.onFocusCanvas();
       this.canvas.unfocus();
     });
 
     this.canvas.on('system.multiple.select', ({data}) => {
+
+      $(this.root).attr('tabindex', 0).focus();
+
       // 加这个判断是为了防止[system.canvas.click]事件和当前事件冲突
       isAfterSelect = true;
 
@@ -332,13 +341,6 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     if (diffInfo.rmNodes.length > 0) {
       this.canvas.removeNodes(diffInfo.rmNodes.map((item) => item.id));
     }
-    if (diffInfo.addEdges.length > 0) {
-      this.canvas.addEdges(diffInfo.addEdges);
-    }
-
-    if (diffInfo.rmEdges.length > 0) {
-      this.canvas.removeEdges(diffInfo.rmEdges.map(edge => edge.id));
-    }
 
     // 更新节点中的字段
     let _isDiffNode = (
@@ -353,13 +355,21 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       this.canvas.updateNodes(diffInfo);
     }
 
+    if (diffInfo.addEdges.length > 0) {
+      this.canvas.addEdges(diffInfo.addEdges);
+    }
+
+    if (diffInfo.rmEdges.length > 0) {
+      this.canvas.removeEdges(diffInfo.rmEdges.map(edge => edge.id));
+    }
+
     this.canvasData = result;
     return true;
   }
 
   componentWillUnmount() {
     if (_.get(this, 'props.config.allowKeyboard')) {
-      document.removeEventListener('keydown', this._deleteFocusItem);
+      this.root.removeEventListener('keydown', this._deleteFocusItem);
     }
   }
 
@@ -479,8 +489,12 @@ export default class TableBuilding extends React.Component<ComProps, any> {
   _deleteFocusItem(e) {
     // todo: 这块需要好好思考下
     if (e.key === 'Delete' || e.key === 'Backspace') {
-      this.onDeleteNodes(this._focusNodes);
-      this.onDeleteEdges(this._focusLinks);
+      if (this._focusNodes && this._focusNodes.length > 0) {
+        this.onDeleteNodes(this._focusNodes);
+      }
+      if (this._focusLinks && this._focusLinks.length > 0) {
+        this.onDeleteEdges(this._focusLinks);
+      }
     }
   }
 

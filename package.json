@@ -1,6 +1,6 @@
 {
   "name": "react-visual-modeling",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "一个基于React的数据可视化建模的DAG图，适用于UML，数据库建模，数据仓库建设等业务",
   "main": "dist/index.js",
   "pack": "pack/index.js",
@@ -22,6 +22,7 @@
   "license": "MIT",
   "dependencies": {
     "butterfly-dag": "~4.0.2",
+    "jquery": "^3.5.1",
     "react-data-mapping": "^1.1.2"
   },
   "peerDependencies": {
