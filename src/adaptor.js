@@ -55,6 +55,20 @@ export const diffPropsData = (newData, oldData, options) => {
   let addEdges = _.differenceWith(newData.edges, oldData.edges, isSameEdge);
   let rmEdges = _.differenceWith(oldData.edges, newData.edges, isSameEdge);
 
+  // 线段的label有变化
+  let updateLabel = [];
+  newData.edges.forEach((a) => {
+    let edge = _.find(oldData.edges, (b) => {
+      return isSameEdge(a, b);
+    });
+    if (edge && a.label !== edge.label) {
+      updateLabel.push({
+        edge,
+        label: a.label
+      });
+    }
+  });
+
   let updateTitle = [];
   let addFields = [];
   let rmFields = [];
@@ -138,6 +152,7 @@ export const diffPropsData = (newData, oldData, options) => {
     rmNodes,
     addEdges,
     rmEdges,
+    updateLabel,
     updateTitle,
     addFields,
     rmFields,

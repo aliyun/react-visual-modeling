@@ -363,6 +363,10 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       this.canvas.removeEdges(diffInfo.rmEdges.map(edge => edge.id));
     }
 
+    if (diffInfo.updateLabel.length > 0) {
+      this.canvas.updateLabel(diffInfo.updateLabel);
+    }
+
     this.canvasData = result;
     return true;
   }

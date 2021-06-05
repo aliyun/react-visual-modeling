@@ -63,6 +63,7 @@ export default class BaseEdge extends Edge {
   }
 
   drawLabel(label) {
+
     let sourceNode = this.sourceNode;
     let targetNode = this.targetNode;
     let labelRender = _.get(this, 'options._config.labelRender');

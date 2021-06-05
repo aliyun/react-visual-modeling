@@ -107,6 +107,13 @@ export default class TableCanvas extends Canvas {
     });
   }
 
+  updateLabel(infos) {
+    infos.forEach((info) => {
+      let edge = this.getEdge(info.edge.id);
+      edge.updateLabel(info.label);
+    })
+  }
+
   expand(nodeId) {
     let node = this.getNode(nodeId);
 
