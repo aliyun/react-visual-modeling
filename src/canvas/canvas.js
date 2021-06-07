@@ -86,13 +86,28 @@ export default class TableCanvas extends Canvas {
       let node = this.getNode(info.nodeId);
       node._updateTitle(info.title);
     });
+
     if (nodeInfos.newCol && nodeInfos.newCol.length > 0) {
       let edges = this.edges.map(item => item);
       this.nodes.forEach((item) => {
         item._updateCol(nodeInfos.newCol);
       });
+
+      /**
+       * 更新col时会将之前的 endpoint 删掉，
+       * 此时需要重新更新
+       */
+      edges.forEach(edge => {
+        const newSrcEndpoint = edge.sourceNode.getEndpoint(edge.sourceEndpoint.id);
+        edge.sourceEndpoint = newSrcEndpoint;
+
+        const newTgtEndpoint = edge.targetNode.getEndpoint(edge.targetEndpoint.id);
+        edge.targetEndpoint = newTgtEndpoint;
+      });
+
       this.addEdges(edges, true);
     }
+
     (nodeInfos.addFields || []).forEach((info) => {
       let node = this.getNode(info.nodeId);
       node._addFields(info.fields);
