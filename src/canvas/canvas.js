@@ -124,8 +124,18 @@ export default class TableCanvas extends Canvas {
 
   updateLabel(infos) {
     infos.forEach((info) => {
-      let edge = this.getEdge(info.edge.id);
-      edge.updateLabel(info.label);
+      let _targetEdge = info.edge;
+      let edge = _.find(this.edges, (item) => {
+        return (
+          _targetEdge.sourceNode === item.sourceNode.id  &&
+          _targetEdge.targetNode === item.targetNode.id  &&
+          _targetEdge.source === item.sourceEndpoint.options.originId  &&
+          _targetEdge.target === item.targetEndpoint.options.originId
+        );
+      });
+      
+      this.getEdge(info.edge.id);
+      edge && edge.updateLabel(info.label);
     })
   }
 

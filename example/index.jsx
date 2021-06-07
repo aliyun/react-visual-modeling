@@ -141,6 +141,9 @@ class Component extends React.Component {
 
         onLoaded={(canvas) => {
           this.canvas = canvas;
+          canvas.on('events', (data) => {
+            console.log(data);
+          });
         }}
 
         // =========== 节点Table相关属性 ===========
