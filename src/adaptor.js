@@ -52,6 +52,18 @@ export const diffPropsData = (newData, oldData, options) => {
     );
   }
 
+  const isSameLabel = (a, b) => {
+    if(typeof a === 'string') {
+      return a === b;
+    }
+
+    try {
+      return JSON.stringify(a) === JSON.stringify(b);
+    } catch (e) {
+      return a === b;
+    }
+  }
+
   let addEdges = _.differenceWith(newData.edges, oldData.edges, isSameEdge);
   let rmEdges = _.differenceWith(oldData.edges, newData.edges, isSameEdge);
 
@@ -61,12 +73,19 @@ export const diffPropsData = (newData, oldData, options) => {
     let edge = _.find(oldData.edges, (b) => {
       return isSameEdge(a, b);
     });
-    if (edge && a.label !== edge.label) {
-      updateLabel.push({
-        edge,
-        label: a.label
-      });
+
+    if(!edge) {
+      return
     }
+
+    if(isSameLabel(a.label, edge.label)) {
+      return;
+    }
+
+    updateLabel.push({
+      edge,
+      label: a.label
+    });
   });
 
   let updateTitle = [];

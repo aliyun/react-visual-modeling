@@ -1,8 +1,8 @@
 import * as React from 'react';
-import * as _ from 'lodash';
 import * as ReactDOM from 'react-dom';
+
 import $ from 'jquery';
-import {Promise} from 'es6-promise'
+import * as _ from 'lodash';
 
 import {bfCfg} from './config';
 import {Arrow} from 'butterfly-dag';
