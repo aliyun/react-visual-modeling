@@ -30,7 +30,8 @@ interface config {
   collapse: {
     enable: boolean,                              // todo: 允许节点收缩
     defaultMode: string,                          // todo: 默认以哪种形式展示
-    status: boolean                               // 是否节点收缩   
+    status: boolean,                              // 是否节点收缩   
+    showCollapseDetail: boolean                   // 展示收缩edge的详情
   },
   enableHoverChain: boolean,
   enableFoucsChain: boolean,
@@ -138,11 +139,11 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       edgeMenu: this.props.edgeMenu,
       data: _.cloneDeep(this.props.data),
       emptyContent: this.props.emptyContent,
-      emptyWidth: this.props.emptyWidth,
+      emptyWidth: this.props.emptyWidth
     });
 
     this.canvasData = result;
-
+    console.log(this.props);
     this.canvas = new Canvas(
       _.merge(
         {},
@@ -155,7 +156,8 @@ export default class TableBuilding extends React.Component<ComProps, any> {
           root,
           data: {
             enableHoverChain: this._enableHoverChain,
-            enableFocusChain: this._enableFocusChain
+            enableFocusChain: this._enableFocusChain,
+            showCollapseDetail: _.get(this.props, 'config.collapse.showCollapseDetail', false)
           }
         }
       )
@@ -335,7 +337,6 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       oldCol: this.props.columns,
       newCol: newProps.columns
     });
-
     if (diffInfo.addNodes.length > 0) {
       this.canvas.addNodes(diffInfo.addNodes);
     }
