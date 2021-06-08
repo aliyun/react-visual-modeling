@@ -9,6 +9,7 @@ export default class TableCanvas extends Canvas {
     this._focusItem = null;
     this._enableHoverChain = opts.data.enableHoverChain;
     this._enableFocusChain = opts.data.enableFocusChain;
+    this._showCollapseDetail = opts.data.showCollapseDetail;
     this.attachEvent();
   }
 
@@ -51,12 +52,14 @@ export default class TableCanvas extends Canvas {
 
     this.on('custom.edge.showCollapseInfo', (data) => {
       const {container, pos, edge} = data;
-      CollapseMenuGen({
-        container,
-        pos,
-        edge,
-        originEdgesInfo: this.originEdges
-      });
+      if (this._showCollapseDetail) {
+        CollapseMenuGen({
+          container,
+          pos,
+          edge,
+          originEdgesInfo: this.originEdges
+        });
+      }
     });
 
     this.on('system.links.delete', (data) => {
@@ -89,9 +92,11 @@ export default class TableCanvas extends Canvas {
 
     if (nodeInfos.newCol && nodeInfos.newCol.length > 0) {
       let edges = this.edges.map(item => item);
+      let _originEdges = this.originEdges;
       this.nodes.forEach((item) => {
         item._updateCol(nodeInfos.newCol);
       });
+      this.originEdges = _originEdges;
 
       /**
        * 更新col时会将之前的 endpoint 删掉，
@@ -124,8 +129,18 @@ export default class TableCanvas extends Canvas {
 
   updateLabel(infos) {
     infos.forEach((info) => {
-      let edge = this.getEdge(info.edge.id);
-      edge.updateLabel(info.label);
+      let _targetEdge = info.edge;
+      let edge = _.find(this.edges, (item) => {
+        return (
+          _targetEdge.sourceNode === item.sourceNode.id  &&
+          _targetEdge.targetNode === item.targetNode.id  &&
+          _targetEdge.source === item.sourceEndpoint.options.originId  &&
+          _targetEdge.target === item.targetEndpoint.options.originId
+        );
+      });
+      
+      this.getEdge(info.edge.id);
+      edge && edge.updateLabel(info.label);
     })
   }
 
@@ -140,7 +155,6 @@ export default class TableCanvas extends Canvas {
     this.removeEdges(oldEdges, true);
     node._expand();
     let newEdges = [];
-
     // 从全局展开图里面纠正线段
     this.originEdges.forEach((item) => {
       if (item.sourceNode === nodeId) {
@@ -206,9 +220,14 @@ export default class TableCanvas extends Canvas {
     });
 
     this.removeEdges(oldEdges, true);
-    let newEdges = node._collapse(oldEdgesInfo);
-    this.addEdges(newEdges, true);
-
+    let newEdgesInfos = node._collapse(oldEdgesInfo);
+    let newEdges = this.addEdges(newEdgesInfos, true);
+    
+    newEdges.forEach((item) => {
+      item.sourceEndpoint.updatePos();
+      item.targetEndpoint.updatePos();
+      item.redraw();
+    });
     this.emit('table.canvas.collapse');
   }
 

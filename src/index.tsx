@@ -28,8 +28,10 @@ interface config {
   showActionIcon?: boolean,                       // 是否展示操作icon：放大，缩小，聚焦
   allowKeyboard?: boolean,                        // 允许键盘删除事件，todo以后支持shift多选
   collapse: {
-    enable: boolean,                              // 允许节点收缩
-    defaultMode: string                           // 默认以哪种形式展示
+    enable: boolean,                              // todo: 允许节点收缩
+    defaultMode: string,                          // todo: 默认以哪种形式展示
+    status: boolean,                              // 是否节点收缩   
+    showCollapseDetail: boolean                   // 展示收缩edge的详情
   },
   enableHoverChain: boolean,
   enableFoucsChain: boolean,
@@ -137,11 +139,11 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       edgeMenu: this.props.edgeMenu,
       data: _.cloneDeep(this.props.data),
       emptyContent: this.props.emptyContent,
-      emptyWidth: this.props.emptyWidth,
+      emptyWidth: this.props.emptyWidth
     });
 
     this.canvasData = result;
-
+    console.log(this.props);
     this.canvas = new Canvas(
       _.merge(
         {},
@@ -154,7 +156,8 @@ export default class TableBuilding extends React.Component<ComProps, any> {
           root,
           data: {
             enableHoverChain: this._enableHoverChain,
-            enableFocusChain: this._enableFocusChain
+            enableFocusChain: this._enableFocusChain,
+            showCollapseDetail: _.get(this.props, 'config.collapse.showCollapseDetail', false)
           }
         }
       )
@@ -334,7 +337,6 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       oldCol: this.props.columns,
       newCol: newProps.columns
     });
-
     if (diffInfo.addNodes.length > 0) {
       this.canvas.addNodes(diffInfo.addNodes);
     }
@@ -365,6 +367,16 @@ export default class TableBuilding extends React.Component<ComProps, any> {
 
     if (diffInfo.updateLabel.length > 0) {
       this.canvas.updateLabel(diffInfo.updateLabel);
+    }
+
+    let newCollapse = _.get(newProps, 'config.collapse.status', false);
+    let oldCollapse = _.get(this.props, 'config.collapse.status', false);
+
+    if (newCollapse !== oldCollapse) {
+      this.canvas.nodes.forEach((node) => {
+        newCollapse && this.canvas.collapse(node.id);
+        !newCollapse && this.canvas.expand(node.id);
+      });
     }
 
     this.canvasData = result;

@@ -201,7 +201,7 @@ export default class TableNode extends Node {
   _createFields(container = this.dom, fieldList) {
     let fields = fieldList || _.get(this, 'options.fields');
     let coloums = _.get(this, 'options._columns', []);
-    let _primaryKey = coloums[0].key;
+    let _primaryKey = _.get(coloums, '[0].key');
 
     if (fields && fields.length) {
       return fields.map((_field) => {

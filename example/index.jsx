@@ -42,6 +42,7 @@ const config = {
   // 是否表格可折叠
   collapse: {
     enable: true,
+    showCollapseDetail: true
   },
   titleRender: (title) => {
     return title;
@@ -79,7 +80,8 @@ class Component extends React.Component {
     this.state = {
       columns: _.cloneDeep(columns),
       data: {},
-      selectable: false
+      selectable: false,
+      collapse: false
     };
   }
 
@@ -141,6 +143,9 @@ class Component extends React.Component {
 
         onLoaded={(canvas) => {
           this.canvas = canvas;
+          canvas.on('events', (data) => {
+            console.log(data);
+          });
         }}
 
         // =========== 节点Table相关属性 ===========
@@ -172,7 +177,13 @@ class Component extends React.Component {
         })}
 
         // =========== 画布配置 ===========
-        config={config}
+        config={{
+          ...config,
+          collapse: {
+            status: this.state.collapse,
+            showCollapseDetail: true
+          }
+        }}
 
         // =========== 框选配置 ===========
         selectable={selectable}
