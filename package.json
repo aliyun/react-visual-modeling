@@ -1,6 +1,6 @@
 {
   "name": "react-visual-modeling",
-  "version": "1.0.30",
+  "version": "1.0.31",
   "description": "一个基于React的数据可视化建模的DAG图，适用于UML，数据库建模，数据仓库建设等业务",
   "main": "dist/index.js",
   "pack": "pack/index.js",
