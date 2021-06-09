@@ -3,6 +3,14 @@ import * as _ from 'lodash';
 import Edge from './canvas/edge';
 import TableNode from './canvas/node';
 
+export const getWidth = (columns) => {
+  let width = columns.reduce((cur, pre) => {
+    cur = cur + pre.width;
+    return cur;
+  }, 0);
+  return width;
+}
+
 export const transformInitData = (info) => {
   let {
     columns, data, config,
