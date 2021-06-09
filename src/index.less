@@ -4,6 +4,7 @@
   background: #2E2E2E;
   outline: none;
   box-shadow: none;
+  user-select: none;
   .table-node {
     position: absolute;
     border: 1px solid #5A5A5A;
@@ -11,12 +12,17 @@
     color: #fff;
     .title {
       position: relative;
-      background: rgba(0,0,0,0.20);
+      background: #252525;
       border-bottom: 1px solid #5A5A5A;
       padding-left: 15px;
       height: 30px;
       line-height: 30px;
       cursor: pointer;
+      .title-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
       .point {
         position: absolute;
         border-radius: 50%;
@@ -61,7 +67,7 @@
       line-height: 24px;
       align-items: center;
       display: flex;
-
+      background: #252525;
       &:hover {
         background: rgba(216, 216, 216, 0.06);
         .point {
@@ -75,6 +81,8 @@
         background: #F66902;
       }
       .field-item {
+        overflow: hidden;
+        white-space: nowrap;
         display: inline-block;
         text-align: center;
       }
@@ -146,6 +154,7 @@
       line-height: 8px;
       font-weight: 900;
       cursor: pointer;
+      background: #252525;
       &:hover {
         background: #383838;
       }
