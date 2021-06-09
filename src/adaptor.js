@@ -3,6 +3,17 @@ import * as _ from 'lodash';
 import Edge from './canvas/edge';
 import TableNode from './canvas/node';
 
+export const BORDER_WIDTH = 2;
+export const OPER_ICON_WIDTH = 86;
+
+export const getWidth = (columns) => {
+  let width = columns.reduce((cur, pre) => {
+    cur = cur + pre.width;
+    return cur;
+  }, 0);
+  return width;
+}
+
 export const transformInitData = (info) => {
   let {
     columns, data, config,

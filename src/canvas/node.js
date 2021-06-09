@@ -7,6 +7,8 @@ import emptyDom from './empty';
 import Endpoint from './endpoint';
 import RightMenuGen from './right-menu';
 
+import {getWidth, BORDER_WIDTH, OPER_ICON_WIDTH} from '../adaptor'
+
 export default class TableNode extends Node {
   constructor(opts) {
     super(opts);
@@ -46,10 +48,16 @@ export default class TableNode extends Node {
     this._createNodeEndpoint();
     // 保持title宽度
     if (this.fieldsList.length > 0) {
-      let width = $(this.fieldsList[0].dom).width();
+      let columns = _.get(this.options, '_columns', []);
+      // 获取所有columns的宽度总和 加border
+      let width = getWidth(columns);
+      // let width = $(this.fieldsList[0].dom).width();
       $(this.dom).find('.title').css('width', width);
     } else {
-      $(this.dom).find('.title').css('width', this.options._emptyWidth || 150);
+      let columns = _.get(this.options, '_columns', []);
+      // 获取所有columns的宽度总和 加border
+      let width = getWidth(columns);
+      $(this.dom).find('.title').css('width', this.options._emptyWidth || width);
     }
 
     $(this.dom).on('dblclick', (e) => {
@@ -101,6 +109,10 @@ export default class TableNode extends Node {
   }
 
   _collapse(oldEdges) { 
+    let columns = _.get(this.options, '_columns', []);
+    // 获取所有columns的宽度总和 加border
+    let width = getWidth(columns) + BORDER_WIDTH;
+
     if (this.status === 'collapse') {
       console.warn(`节点${this.id}已经是收缩状态`)
       return;
@@ -109,6 +121,7 @@ export default class TableNode extends Node {
     this._createTitleEndpoint();
     // 隐藏字段
     this.fieldsList.forEach((item) => {
+      $(item.dom).parent().css('width', width);
       $(item.dom).css('display', 'none');
     });
     // 记录状态
@@ -147,11 +160,15 @@ export default class TableNode extends Node {
     let title = _.get(this, 'options.title');
     let titleRender = _.get(this, 'options._config.titleRender');
     let titleDom = $(`<div class="title"></div>`);
+    let columns = _.get(this.options, '_columns', []);
+    // 获取所有columns的宽度 - 操作按钮预留宽度
+    let width = getWidth(columns) - OPER_ICON_WIDTH;
     $(container).append(titleDom);
     if (title) {
       if (titleRender) {
         let titleTextDom = $(`<div class="title-text"></div>`);
         $(titleDom).append(titleTextDom);
+        titleTextDom.css('width', width)
         ReactDOM.render(
           titleRender(title),
           titleTextDom[0]
@@ -159,6 +176,7 @@ export default class TableNode extends Node {
       } else {
         let titleTextDom = $(`<div class="title-text">${title}</div>`);
         $(titleDom).append(titleTextDom);
+        titleTextDom.css('width', width)
       }
     }
   }
