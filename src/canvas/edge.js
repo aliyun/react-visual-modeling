@@ -77,6 +77,7 @@ export default class BaseEdge extends Edge {
     // 存在 labelRender 但是没有 label 的时候，需要 labelRender 拿到这个 dom 去渲染
     if(labelRender) {
       const span = document.createElement('span');
+      span.className = 'visual-modeling-label';
       span.style.position = 'absolute';
       span.style.zIndex = 500;
       return span;
