@@ -24,6 +24,16 @@ const config = {
     },
   },
 
+  // 网格布局
+  gridMode: {
+    theme: {
+      shapeType: 'circle',     // 展示的类型，支持line & circle
+      gap: 20,                 // 网格间隙
+      circleRadiu: 1.5,        // 圆点半径
+      circleColor: 'rgba(255, 255, 255, 0.08)',    // 圆点颜色
+    }
+  },
+
   // 键盘事件
   allowKeyboard: true,
 

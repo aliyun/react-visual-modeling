@@ -50,6 +50,17 @@ interface config {
       nodeColor: any
     }
   },
+  gridMode: {
+    isAdsorb: boolean,
+    theme: {
+      shapeType: string,                          // 展示的类型，支持line & circle
+      gap: number,                                // 网格间隙
+      lineWidth: 1,                               // 线段粗细
+      lineColor: string,                          // 线段颜色
+      circleRadiu: number,                        // 圆点半径
+      circleColor: string                         // 圆点颜色
+    }
+  },
   butterfly: any;                                 // 小蝴蝶的画布配置，参考：https://github.com/alibaba/butterfly/blob/dev/v4/docs/zh-CN/canvas.md
 }
 
@@ -143,7 +154,6 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     });
 
     this.canvasData = result;
-    console.log(this.props);
     this.canvas = new Canvas(
       _.merge(
         {},
@@ -189,6 +199,10 @@ export default class TableBuilding extends React.Component<ComProps, any> {
         this.canvas.nodes.forEach((item) => {
           this.canvas.collapse(item.id);
         })
+      }
+
+      if (_.get(this, 'props.config.gridMode')) {
+        this.canvas.setGridMode(true, _.assign({}, _.get(this, 'props.config.gridMode', {})))
       }
 
       this.forceUpdate();
