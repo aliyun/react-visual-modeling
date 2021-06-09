@@ -7,7 +7,7 @@ import emptyDom from './empty';
 import Endpoint from './endpoint';
 import RightMenuGen from './right-menu';
 
-import {getWidth} from '../adaptor'
+import {getWidth, BORDER_WIDTH, OPER_ICON_WIDTH} from '../adaptor'
 
 export default class TableNode extends Node {
   constructor(opts) {
@@ -111,7 +111,7 @@ export default class TableNode extends Node {
   _collapse(oldEdges) { 
     let columns = _.get(this.options, '_columns', []);
     // 获取所有columns的宽度总和 加border
-    let width = getWidth(columns) + 2;
+    let width = getWidth(columns) + BORDER_WIDTH;
 
     if (this.status === 'collapse') {
       console.warn(`节点${this.id}已经是收缩状态`)
@@ -161,7 +161,8 @@ export default class TableNode extends Node {
     let titleRender = _.get(this, 'options._config.titleRender');
     let titleDom = $(`<div class="title"></div>`);
     let columns = _.get(this.options, '_columns', []);
-    let width = getWidth(columns) - 86;
+    // 获取所有columns的宽度 - 操作按钮预留宽度
+    let width = getWidth(columns) - OPER_ICON_WIDTH;
     $(container).append(titleDom);
     if (title) {
       if (titleRender) {
