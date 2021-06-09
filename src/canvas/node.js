@@ -7,6 +7,7 @@ import emptyDom from './empty';
 import Endpoint from './endpoint';
 import RightMenuGen from './right-menu';
 
+// todo: OPER_ICON_WIDTH可能需要优化，而且这块需要写在node里面，不要写在adaptor上
 import {getWidth, BORDER_WIDTH, OPER_ICON_WIDTH} from '../adaptor'
 
 export default class TableNode extends Node {
@@ -51,13 +52,10 @@ export default class TableNode extends Node {
       let columns = _.get(this.options, '_columns', []);
       // 获取所有columns的宽度总和 加border
       let width = getWidth(columns);
-      // let width = $(this.fieldsList[0].dom).width();
       $(this.dom).find('.title').css('width', width);
     } else {
       let columns = _.get(this.options, '_columns', []);
-      // 获取所有columns的宽度总和 加border
-      let width = getWidth(columns);
-      $(this.dom).find('.title').css('width', this.options._emptyWidth || width);
+      $(this.dom).find('.title').css('width', this.options._emptyWidth || 150);
     }
 
     $(this.dom).on('dblclick', (e) => {
@@ -110,7 +108,7 @@ export default class TableNode extends Node {
 
   _collapse(oldEdges) { 
     let columns = _.get(this.options, '_columns', []);
-    // 获取所有columns的宽度总和 加border
+    // 获取所有columns的宽度
     let width = getWidth(columns) + BORDER_WIDTH;
 
     if (this.status === 'collapse') {
@@ -408,6 +406,12 @@ export default class TableNode extends Node {
     this.fieldsList = [];
     _.set(this, 'options._columns', newCol);
     this._addFields();
+
+    // 获取所有columns的宽度
+    let width = getWidth(newCol);
+    let textWidth = width - OPER_ICON_WIDTH;
+    $(this.dom).find('.title').css('width', width);
+    $(this.dom).find('.title-text').css('width', textWidth);
   }
 
   _createTitleEndpoint() {
