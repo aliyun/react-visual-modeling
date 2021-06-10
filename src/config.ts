@@ -57,7 +57,9 @@ export const actions = [
     icon: 'table-build-icon table-build-icon-quanping2',
     title: '居中',
     onClick: (canvas) => {
-      canvas.focusCenterWithAnimate();
+      canvas.focusCenterWithAnimate(undefined, () => {
+        console.log('complete!!!')
+      });
     }
   }
 ];

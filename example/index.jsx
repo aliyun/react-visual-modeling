@@ -68,16 +68,12 @@ const config = {
   },
   labelRender: (label) => {
     if(!label) {
-      return (
-        <span className="visual-modeling-label">
-          connection
-        </span>
-      )
+      return 'connection';
     }
 
     return (
       <Tooltip title="自定义label">
-        <span className="visual-modeling-label">{label}</span>
+        {label}
       </Tooltip>
     )
   }
@@ -154,7 +150,7 @@ class Component extends React.Component {
         onLoaded={(canvas) => {
           this.canvas = canvas;
           canvas.on('events', (data) => {
-            console.log(data);
+            // console.log(data);
           });
         }}
 
