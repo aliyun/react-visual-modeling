@@ -390,6 +390,12 @@ export default class TableNode extends Node {
     this.fieldsList = [];
     _.set(this, 'options._columns', newCol);
     this._addFields();
+
+    // 获取所有columns的宽度
+    let width = getWidth(newCol);
+    let textWidth = width - OPER_ICON_WIDTH;
+    $(this.dom).find('.title').css('width', width);
+    $(this.dom).find('.title-text').css('width', textWidth);
   }
 
   _createTitleEndpoint() {
