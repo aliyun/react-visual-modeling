@@ -49,7 +49,7 @@ export default class TableNode extends Node {
       let width = $(this.fieldsList[0].dom).width();
       $(this.dom).find('.title').css('width', width);
     } else {
-      $(this.dom).find('.title').css('width', this.options._emptyWidth || width);
+      $(this.dom).find('.title').css('width', this.options._emptyWidth || 150);
     }
 
     $(this.dom).on('dblclick', (e) => {

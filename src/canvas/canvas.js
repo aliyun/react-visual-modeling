@@ -224,6 +224,7 @@ export default class TableCanvas extends Canvas {
     let newEdges = this.addEdges(newEdgesInfos, true);
     
     newEdges.forEach((item) => {
+      item.collapse = true;
       item.sourceEndpoint.updatePos();
       item.targetEndpoint.updatePos();
       item.redraw();
