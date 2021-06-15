@@ -44,11 +44,8 @@ export default class TableNode extends Node {
   mounted() {
     // 生成field的endpoint
     this._createNodeEndpoint();
-    // 保持title宽度
-    if (this.fieldsList.length > 0) {
-      let width = $(this.fieldsList[0].dom).width();
-      $(this.dom).find('.title').css('width', width);
-    } else {
+
+    if (this.fieldsList.length === 0) {
       $(this.dom).find('.title').css('width', this.options._emptyWidth || 150);
     }
 
