@@ -93,8 +93,8 @@ export default class TableNode extends Node {
 
     // 记录状态
     this.status = 'expand';
-    // 改变icon状态
-    $(this.dom).find('.table-build-icon-xiala').removeClass('collapse');
+    // 改变伸缩状态
+    $(this.dom).removeClass('collapse');
   }
 
   _collapse(oldEdges) { 
@@ -110,8 +110,8 @@ export default class TableNode extends Node {
     });
     // 记录状态
     this.status = 'collapse';
-    // 改变icon状态
-    $(this.dom).find('.table-build-icon-xiala').addClass('collapse');
+    // 改变伸缩状态
+    $(this.dom).addClass('collapse');
 
     // 生成新线段,并去重
     let newEdges = [];

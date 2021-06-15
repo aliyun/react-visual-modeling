@@ -10,9 +10,14 @@
     border: 1px solid #5A5A5A;
     border-radius: 4px;
     color: #fff;
+    background: #252525;
+    &.collapse {
+      .title {
+        border-bottom: none;
+      }
+    }
     .title {
       position: relative;
-      background: #252525;
       border-bottom: 1px solid #5A5A5A;
       padding: 0 50px 0 15px;
       height: 30px;
@@ -54,9 +59,6 @@
         }
         .table-build-icon-xiala{
           display: inline-block;
-          &.collapse{
-            /* todo: 需要一个新icon */
-          }
         }
       }
     }
@@ -68,7 +70,6 @@
       line-height: 24px;
       align-items: center;
       display: flex;
-      background: #252525;
       &:hover {
         background: rgba(216, 216, 216, 0.06);
         .point {
