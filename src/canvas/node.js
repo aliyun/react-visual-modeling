@@ -44,12 +44,9 @@ export default class TableNode extends Node {
   mounted() {
     // 生成field的endpoint
     this._createNodeEndpoint();
-    // 保持title宽度
-    if (this.fieldsList.length > 0) {
-      let width = $(this.fieldsList[0].dom).width();
-      $(this.dom).find('.title').css('width', width);
-    } else {
-      $(this.dom).find('.title').css('width', this.options._emptyWidth || width);
+
+    if (this.fieldsList.length === 0) {
+      $(this.dom).find('.title').css('width', this.options._emptyWidth || 150);
     }
 
     $(this.dom).on('dblclick', (e) => {
@@ -96,8 +93,8 @@ export default class TableNode extends Node {
 
     // 记录状态
     this.status = 'expand';
-    // 改变icon状态
-    $(this.dom).find('.table-build-icon-xiala').removeClass('collapse');
+    // 改变伸缩状态
+    $(this.dom).removeClass('collapse');
   }
 
   _collapse(oldEdges) { 
@@ -113,8 +110,8 @@ export default class TableNode extends Node {
     });
     // 记录状态
     this.status = 'collapse';
-    // 改变icon状态
-    $(this.dom).find('.table-build-icon-xiala').addClass('collapse');
+    // 改变伸缩状态
+    $(this.dom).addClass('collapse');
 
     // 生成新线段,并去重
     let newEdges = [];
@@ -391,11 +388,6 @@ export default class TableNode extends Node {
     _.set(this, 'options._columns', newCol);
     this._addFields();
 
-    // 获取所有columns的宽度
-    let width = getWidth(newCol);
-    let textWidth = width - OPER_ICON_WIDTH;
-    $(this.dom).find('.title').css('width', width);
-    $(this.dom).find('.title-text').css('width', textWidth);
   }
 
   _createTitleEndpoint() {
