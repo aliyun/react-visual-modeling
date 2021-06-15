@@ -140,7 +140,16 @@ export default class TableCanvas extends Canvas {
       });
       
       this.getEdge(info.edge.id);
-      edge && edge.updateLabel(info.label);
+      if (edge) {
+        edge.updateLabel(info.label);
+        $(edge.labelDom).on('dblclick',(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          edge.emit('custom.edge.dblClick',{
+            edge
+          });
+        });
+      }
     })
   }
 
