@@ -1,4 +1,5 @@
 import {Canvas} from 'butterfly-dag';
+import $ from 'jquery';
 
 import CollapseMenuGen from './collapse-menu.jsx';
 
