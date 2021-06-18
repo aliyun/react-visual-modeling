@@ -54,8 +54,8 @@ const config = {
     enable: true,
     showCollapseDetail: true
   },
-  titleRender: (data) => {
-    return data.title;
+  titleRender: (title) => {
+    return title;
   },
   titleExtIconRender: () => {
     return (
