@@ -150,7 +150,7 @@ export default class TableNode extends Node {
         let titleTextDom = $(`<div class="title-text"></div>`);
         $(titleDom).append(titleTextDom);
         ReactDOM.render(
-          titleRender(title),
+          titleRender(this.options),
           titleTextDom[0]
         );
       } else {
