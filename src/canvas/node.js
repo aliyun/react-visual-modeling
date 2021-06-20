@@ -151,7 +151,10 @@ export default class TableNode extends Node {
         $(titleDom).append(titleTextDom);
         ReactDOM.render(
           titleRender(title, this.options),
-          titleTextDom[0]
+          titleTextDom[0],
+          () => {
+            this._updateEndpointPos();
+          }
         );
       } else {
         let titleTextDom = $(`<div class="title-text">${title}</div>`);
@@ -302,7 +305,10 @@ export default class TableNode extends Node {
         ReactDOM.unmountComponentAtNode(titleTextDom[0]);
         ReactDOM.render(
           titleRender(newTitle),
-          titleTextDom[0]
+          titleTextDom[0],
+          () => {
+            this._updateEndpointPos();
+          }
         );
       } else {
         titleTextDom.text(newTitle);
@@ -433,5 +439,11 @@ export default class TableNode extends Node {
         RightMenuGen(this.dom, 'node', [e.clientX, e.clientY], menus, this.options);
       })
     }
+  }
+
+  _updateEndpointPos() {
+    (this.endpoints || []).forEach((item) => {
+      item.updatePos();
+    });
   }
 };
