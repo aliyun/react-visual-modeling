@@ -74,21 +74,29 @@ export default class BaseEdge extends Edge {
       return container[0];
     }
 
+    let dom = null;
     // 存在 labelRender 但是没有 label 的时候，需要 labelRender 拿到这个 dom 去渲染
     if(labelRender) {
       const span = document.createElement('span');
       span.className = 'visual-modeling-label';
       span.style.position = 'absolute';
       span.style.zIndex = 500;
-      return span;
+      dom = span;
     }
 
     if (label && typeof label === 'string') {
       let container = $('<span class="butterflies-label visual-modeling-label"></span>');
       container.text(label);
-
-      return container[0];
+      dom = container[0];
     }
+
+    $(dom).on('click', () => {
+      this.emit('system.link.click', {
+        edge: this
+      });
+    });
+
+    return dom;
   }
 
   isConnect() {
