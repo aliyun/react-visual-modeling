@@ -75,7 +75,7 @@ export const diffPropsData = (newData, oldData, options) => {
     });
 
     if(!edge) {
-      return
+      return;
     }
 
     if(isSameLabel(a.label, edge.label)) {

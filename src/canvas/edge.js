@@ -82,9 +82,7 @@ export default class BaseEdge extends Edge {
       span.style.position = 'absolute';
       span.style.zIndex = 500;
       dom = span;
-    }
-
-    if (label && typeof label === 'string') {
+    } else if (label && typeof label === 'string') {
       let container = $('<span class="butterflies-label visual-modeling-label"></span>');
       container.text(label);
       dom = container[0];

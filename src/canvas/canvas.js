@@ -271,6 +271,19 @@ export default class TableCanvas extends Canvas {
     });
   }
 
+  focusItems(nodes = [], edges = []) {
+    this.emit('custom.item.focus', {
+      nodes,
+      edges
+    });
+    nodes.forEach((item) => {
+      item.focus();
+    });
+    edges.forEach((item) => {
+      item.focus();
+    });
+  }
+
   _findChain(nodeId, pointId) {
     let resultPoints = [];
     let resultEdges = [];
