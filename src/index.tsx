@@ -359,8 +359,7 @@ export default class TableBuilding extends React.Component<ComProps, any> {
 
     let diffInfo = diffPropsData(result, this.canvasData, {
       oldCol: this.props.columns,
-      newCol: newProps.columns,
-      updateEdges: this.canvas.edges
+      newCol: newProps.columns
     });
     if (diffInfo.addNodes.length > 0) {
       this.canvas.addNodes(diffInfo.addNodes);
