@@ -220,13 +220,12 @@ export default class TableBuilding extends React.Component<ComProps, any> {
 
     let _addLinks = (links: any) => {
       let newLinkOpts = links.map((item: any) => {
-        let _oldSource = _.get(item, 'sourceEndpoint.id', '');
-        let _oldTarget = _.get(item, 'targetEndpoint.id', '');
-        let _newSource = _oldSource.indexOf('-right') !== -1 ? _oldSource : _oldSource + '-right';
-        let _newTarget = _oldTarget.indexOf('-left') !== -1 ? _oldTarget : _oldTarget + '-left';
-
+        let _oldSource = _.get(item, 'sourceEndpoint.id', '').replace('-right', '');
+        let _oldTarget = _.get(item, 'targetEndpoint.id', '').replace('-left', '');
+        let _newSource = _oldSource + '-right';
+        let _newTarget = _oldTarget + '-left';
         return {
-          id: item.options.id,
+          id: item.options.id || `${item.options.sourceNode}-${_oldSource}-${item.options.targetNode}-${_oldTarget}`,
           sourceNode: item.options.sourceNode,
           targetNode: item.options.targetNode,
           arrowShapeType: item.arrowShapeType,
@@ -247,17 +246,19 @@ export default class TableBuilding extends React.Component<ComProps, any> {
           target: _.get(item, 'targetEndpoint.options.originId'),
         }));
       });
+
+      return newEdge;
     }
     
     this.canvas.on('system.link.connect', (data: any) => {
-      _addLinks(data.links || []);
-      this.onConnectEdges(data.links);
+      let newEdges = _addLinks(data.links || []);
+      this.onConnectEdges(newEdges);
       this.forceUpdate();
     });
 
     this.canvas.on('system.link.reconnect', (data: any) => {
-      _addLinks(data.addLinks || []);
-      this.onReConnectEdges(data.addLinks, data.delLinks);
+      let _addEdges = _addLinks(data.addLinks || []);
+      this.onReConnectEdges(_addEdges, data.delLinks);
 
       this.forceUpdate();
     });
@@ -322,6 +323,13 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       this.onDeleteNodes([data.node]);
     });
 
+    this.canvas.on('custom.item.focus', (data: any) => {
+      this._unfocus();
+      this._focusNodes = this._focusNodes.concat(data.nodes || []);
+      this._focusLinks = this._focusLinks.concat(data.edges || []);
+
+    });
+
     this.canvas.on('table.canvas.expand', () => {
       this.forceUpdate();
     });
@@ -351,7 +359,8 @@ export default class TableBuilding extends React.Component<ComProps, any> {
 
     let diffInfo = diffPropsData(result, this.canvasData, {
       oldCol: this.props.columns,
-      newCol: newProps.columns
+      newCol: newProps.columns,
+      updateEdges: this.canvas.edges
     });
     if (diffInfo.addNodes.length > 0) {
       this.canvas.addNodes(diffInfo.addNodes);
@@ -407,8 +416,22 @@ export default class TableBuilding extends React.Component<ComProps, any> {
 
   onConnectEdges(links) {
     let linksInfo = links.map((item) => {
-      return item.options;
+      return _.assign(item.options, {
+        source: _.get(item, 'options.source', '').replace('-right', ''),
+        target: _.get(item, 'options.target', '').replace('-left', '')
+      });
     });
+
+    let newEdges = _.differenceWith(linksInfo, this.canvasData.edges, (a: any, b: any) => {
+      return (
+        a.sourceNode === b.sourceNode &&
+        a.targetNode === b.targetNode &&
+        a.source === b.source &&
+        a.target === b.target
+      );
+    });
+
+    this.canvasData.edges = this.canvasData.edges.concat(newEdges);
 
     this.props.onChange && this.props.onChange({
       type: 'system.link.connect',
@@ -418,10 +441,16 @@ export default class TableBuilding extends React.Component<ComProps, any> {
 
   onReConnectEdges(addLinks, rmLinks) {
     let addLinksInfo = addLinks.map((item) => {
-      return item.options;
+      return _.assign(item.options, {
+        source: _.get(item, 'options.source', '').replace('-right', ''),
+        target: _.get(item, 'options.target', '').replace('-left', '')
+      });
     });
     let rmLinksInfo = rmLinks.map((item) => {
-      return item.options;
+      return _.assign(item.options, {
+        source: _.get(item, 'options.source', '').replace('-right', ''),
+        target: _.get(item, 'options.target', '').replace('-left', '')
+      });
     });
     this.props.onChange && this.props.onChange({
       type: 'system.link.reconnect',
