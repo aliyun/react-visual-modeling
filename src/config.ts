@@ -39,7 +39,7 @@ export const actions = [
   {
     key: 'zoom-in',
     icon: 'table-build-icon table-build-icon-zoom-in',
-    title: '缩小',
+    title: '放大',
     onClick: (canvas) => {
       canvas.zoom(canvas._zoomData + 0.1);
     }
@@ -47,7 +47,7 @@ export const actions = [
   {
     key: 'zoom-out',
     icon: 'table-build-icon table-build-icon-zoom-out',
-    title: '放大',
+    title: '缩小',
     onClick: (canvas) => {
       canvas.zoom(canvas._zoomData - 0.1);
     }
