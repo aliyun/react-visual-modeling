@@ -85,8 +85,8 @@ interface ComProps {
   emptyWidth?: number | string,                     // 空数据时默认标题宽度
   emptyContent?: string | JSX.Element,              // 空数据显示内容
   selectable: boolean;                              // 开启框选模式
-  beforeDeleteNode: Promise<any> | boolean,     // 删除节点前方法，可做二次删除确认
-  beforeDeleteEdge: Promise<any> | boolean,     // 删除线段前方法，可做二次删除确认
+  beforeDeleteNode: Promise<any> | boolean,         // 删除节点前方法，可做二次删除确认
+  beforeDeleteEdge: Promise<any> | boolean,         // 删除线段前方法，可做二次删除确认
   onLoaded(canvas: any, utils: any): void,          // 渲染完毕事件
   onChange(data: any): void,                        // 图内数据变化事件
   onFocusNode(node: any): void,                     // 聚焦节点事件
@@ -417,7 +417,11 @@ export default class TableBuilding extends React.Component<ComProps, any> {
     let linksInfo = links.map((item) => {
       return _.assign(item.options, {
         source: _.get(item, 'options.source', '').replace('-right', ''),
-        target: _.get(item, 'options.target', '').replace('-left', '')
+        target: _.get(item, 'options.target', '').replace('-left', ''),
+        _sourceNode: item.sourceNode,
+        _targetNode: item.targetNode,
+        _sourceEndpoint: item.sourceEndpoint,
+        _targetEndpoint: item.targetEndpoint
       });
     });
 
