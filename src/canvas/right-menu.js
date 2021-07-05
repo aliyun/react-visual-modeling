@@ -10,6 +10,9 @@ let _genTipDom = (menuData, data) => {
     if (item.onClick) {
       menuItem.on('click', (e) => {
         item.onClick(item.key, data);
+        if (item.closable) {
+          Tips.closeMenu();
+        }
       });
     }
     dom.append(menuItem);
