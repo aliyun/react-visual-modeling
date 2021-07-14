@@ -173,7 +173,10 @@ export default class TableBuilding extends React.Component<ComProps, any> {
       )
     );
 
-    beforeLoad({Arrow});
+    beforeLoad({
+      canvas: this.canvas,
+      Arrow
+    });
 
     this.canvas.draw(result, () => {
       this.props.onLoaded && this.props.onLoaded(this.canvas);
