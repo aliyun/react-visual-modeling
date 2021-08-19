@@ -1,4 +1,4 @@
-import {Canvas} from 'butterfly-dag';
+import {Canvas, Tips} from 'butterfly-dag';
 import $ from 'jquery';
 
 import CollapseMenuGen from './collapse-menu.jsx';
@@ -24,6 +24,11 @@ export default class TableCanvas extends Canvas {
         type: 'endpoint:drag',
         data: linkedPoint
       });
+    });
+
+    // 移动节点时，隐藏菜单
+    this.on('system.drag.start', (data) => {
+      Tips.closeMenu();
     });
 
     if (this._enableHoverChain) {
